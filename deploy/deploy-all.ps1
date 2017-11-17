@@ -51,10 +51,10 @@ $ctx = $storageAccount.Context
 
 # Create container to upload templates towards
 $templatesContainerName = "temptemplates"
-$templatesContainerUri = "https://$StorageAccountNameDeploy.blob.core.windows.net/$templatesContainerName/"
+$templatesContainerUri = "https://$StorageAccountNameDeploy.blob.core.windows.net/$templatesContainerName"
 
 # Upload main template:
-& "$scriptDir\copyFilesToAzureStorageContainer.ps1" -LocalPath "$scriptDir\templates" `
+& "$scriptDir\copyFilesToAzureStorageContainer.ps1" -LocalPath "$scriptDir\templates\" `
                                    -StorageContainer $templatesContainerName -StorageContext $ctx -CreateStorageContainer  -Recurse -Force
 
 # Create SAS token for the packages container
@@ -72,6 +72,9 @@ Write-Output "Root template SAS - $rootTemplateUri"
 $azureRmContext = Get-AzureRmContext
 $subscriptionId = $azureRmContext.Subscription.SubscriptionId
 $keyVaultId = "/subscriptions/$subscriptionId/resourceGroups/$KeyVaultRGName/providers/Microsoft.KeyVault/vaults/$KeyVaultName"
+$clustercertificate = Get-AzureKeyVaultSecret -VaultName $KeyVaultName -Name 'clustercertificate'
+$clusterurl = $clustercertificate.Id
+Write-Output "clusterurl: " $clusterurl
 $paramsFile = @{
     '$schema' = "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#"
     contentVersion = "1.0.0.0"
@@ -99,13 +102,13 @@ $paramsFile = @{
          }
        }
         'certificateThumbprint' =  @{
-          value = "$CertificateThumbprint"
+          value = "D07E8C71FBD5F793B010D78B4A959FE7D8EC9214"
         }
         'sourceVaultResourceId' =  @{
-          value = "$SourceVaultResourceId"
+          value = "$keyVaultId"
         }
         'certificateUrlValue' = @{
-          value = "$CertificateUrlValue"
+          value = "$clusterurl"
         }    
         '_artifactsLocation' = @{
           value = $templatesContainerUri
