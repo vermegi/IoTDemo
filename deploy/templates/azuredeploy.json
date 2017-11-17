@@ -40,6 +40,9 @@
     },
     "_artifactsLocation": {
       "type": "string"
+    },
+    "_artifactsSAS": {
+      "type": "string"
     }
   },
   "variables": {
@@ -55,11 +58,11 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat(parameters('_artifactsLocation'), '/', variables('deployclusterTemplateFolder'), '/', variables('deployclusterTemplateFileName'))]",
+          "uri": "[concat(parameters('_artifactsLocation'), '/', variables('deployclusterTemplateFolder'), '/', variables('deployclusterTemplateFileName'), parameters('_artifactsSAS'))]",
           "contentVersion": "1.0.0.0"
         },
         "parametersLink": {
-          "uri": "[concat(parameters('_artifactsLocation'), '/', variables('deployclusterTemplateFolder'), '/', variables('deployclusterTemplateParametersFileName'))]",
+          "uri": "[concat(parameters('_artifactsLocation'), '/', variables('deployclusterTemplateFolder'), '/', variables('deployclusterTemplateParametersFileName'), parameters('_artifactsSAS'))]",
           "contentVersion": "1.0.0.0"
         }
       }
