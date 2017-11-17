@@ -49,6 +49,12 @@
         "description": "Refers to the location URL in your key vault where the certificate was uploaded, it is should be in the format of https://<name of the vault>.vault.azure.net:443/secrets/<exact location>"
       }
     },
+    "serviceBusNamespaceName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Service Bus namespace"
+      }
+    },
     "_artifactsLocation": {
       "type": "string"
     },
@@ -58,7 +64,9 @@
   },
   "variables": {
     "deployclusterTemplateFolder": "nestedtemplates",
-    "deployclusterTemplateFileName": "azuredeploy.cluster.json"
+    "deployclusterTemplateFileName": "azuredeploy.cluster.json",
+    "deploysbTemplateFileName": "azuredeploy.servicebus.json"
+
   },
   "resources": [
     {
@@ -81,6 +89,23 @@
           "certificateUrlValue": { "value": "[parameters('certificateUrlValue')]" }
         }
       }
+    },
+    {
+      "name": "deployservicebus",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2016-09-01",
+      "dependsOn": [],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('_artifactsLocation'), '/', variables('deployclusterTemplateFolder'), '/', variables('deploysbTemplateFileName'), parameters('_artifactsSAS'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "serviceBusNamespaceName": { "value": "[parameters('serviceBusNamespaceName')]" }
+        }
+      }
     }
+
   ]
 }

@@ -22,7 +22,10 @@ Param(
   [string]$ResourcePrefix,
 
   [Parameter(Mandatory=$True)]
-  [string]$ClusterName
+  [string]$ClusterName,
+
+  [Parameter(Mandatory=$True)]
+  [string]$ServiceBusNamespaceName
 )
 
 Select-AzureRmSubscription -SubscriptionName $SubscriptionName
@@ -112,6 +115,9 @@ $paramsFile = @{
         }    
         '_artifactsLocation' = @{
           value = $templatesContainerUri
+        }
+        'serviceBusNamespaceName' = @{
+          value = $ServiceBusNamespaceName
         }
         '_artifactsSAS' = @{
           value = $templatesContainerSas
