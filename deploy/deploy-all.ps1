@@ -25,7 +25,11 @@ Param(
   [string]$ClusterName,
 
   [Parameter(Mandatory=$True)]
-  [string]$ServiceBusNamespaceName
+  [string]$ServiceBusNamespaceName,
+
+  [Parameter(Mandatory=$True)]
+  [string]$IotHubName
+
 )
 
 Select-AzureRmSubscription -SubscriptionName $SubscriptionName
@@ -113,12 +117,16 @@ $paramsFile = @{
         'certificateUrlValue' = @{
           value = "$clusterurl"
         }    
-        '_artifactsLocation' = @{
-          value = $templatesContainerUri
-        }
         'serviceBusNamespaceName' = @{
           value = $ServiceBusNamespaceName
         }
+        'iotHubName' = @{
+          value = $IotHubName
+        }
+		'_artifactsLocation' = @{
+          value = $templatesContainerUri
+        }
+
         '_artifactsSAS' = @{
           value = $templatesContainerSas
         }   

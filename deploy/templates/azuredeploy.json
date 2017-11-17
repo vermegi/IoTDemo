@@ -55,6 +55,13 @@
         "description": "Name of the Service Bus namespace"
       }
     },
+    "iotHubName": {
+      "type": "string",
+      "minLength": 3,
+      "metadata": {
+        "description": "Name of the IoT Hub instance to provision."
+      }
+    },
     "_artifactsLocation": {
       "type": "string"
     },
@@ -65,7 +72,8 @@
   "variables": {
     "deployclusterTemplateFolder": "nestedtemplates",
     "deployclusterTemplateFileName": "azuredeploy.cluster.json",
-    "deploysbTemplateFileName": "azuredeploy.servicebus.json"
+    "deploysbTemplateFileName": "azuredeploy.servicebus.json",
+    "deployiothubTemplateFileName": "azuredeploy.iothub.json"
 
   },
   "resources": [
@@ -105,7 +113,22 @@
           "serviceBusNamespaceName": { "value": "[parameters('serviceBusNamespaceName')]" }
         }
       }
+    },
+    {
+      "name": "deployiothub",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2016-09-01",
+      "dependsOn": [],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('_artifactsLocation'), '/', variables('deployclusterTemplateFolder'), '/', variables('deployiothubTemplateFileName'), parameters('_artifactsSAS'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "iotHubName": { "value": "[parameters('iotHubName')]" }
+        }
+      }
     }
-
   ]
 }

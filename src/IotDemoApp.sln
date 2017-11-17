@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.16
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{A07B5EB6-E848-4116-A8D0-A826331D98C6}") = "IotDemoApp", "IotDemoApp\IotDemoApp.sfproj", "{3DF7ADD2-8DBB-4B88-898C-27635C106098}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IotDemo.DeviceEmulator", "IotDemo.DeviceEmulator\IotDemo.DeviceEmulator.csproj", "{9D03AFE8-F0ED-4197-8356-B168CC94FF2B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3DF7ADD2-8DBB-4B88-898C-27635C106098}.Debug|x64.ActiveCfg = Debug|x64
+		{3DF7ADD2-8DBB-4B88-898C-27635C106098}.Debug|x64.Build.0 = Debug|x64
+		{3DF7ADD2-8DBB-4B88-898C-27635C106098}.Debug|x64.Deploy.0 = Debug|x64
+		{3DF7ADD2-8DBB-4B88-898C-27635C106098}.Release|x64.ActiveCfg = Release|x64
+		{3DF7ADD2-8DBB-4B88-898C-27635C106098}.Release|x64.Build.0 = Release|x64
+		{3DF7ADD2-8DBB-4B88-898C-27635C106098}.Release|x64.Deploy.0 = Release|x64
+		{9D03AFE8-F0ED-4197-8356-B168CC94FF2B}.Debug|x64.ActiveCfg = Debug|x64
+		{9D03AFE8-F0ED-4197-8356-B168CC94FF2B}.Debug|x64.Build.0 = Debug|x64
+		{9D03AFE8-F0ED-4197-8356-B168CC94FF2B}.Release|x64.ActiveCfg = Release|x64
+		{9D03AFE8-F0ED-4197-8356-B168CC94FF2B}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {623E913E-0B4E-44DB-AE09-48FB8CC9F3B0}
+	EndGlobalSection
+EndGlobal
