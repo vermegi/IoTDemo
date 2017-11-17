@@ -2,6 +2,13 @@
   "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Location of the Cluster"
+      }
+    },
     "clusterName": {
       "type": "string",
       "metadata": {
@@ -47,8 +54,8 @@
   },
   "variables": {
     "deployclusterTemplateFolder": "nestedtemplates",
-    "deployclusterTemplateFileName": "azuredeploy.cluster.json",
-    "deployclusterTemplateParametersFileName": "azuredeploy.cluster.parameters.json"},
+    "deployclusterTemplateFileName": "azuredeploy.cluster.json"
+  },
   "resources": [
     {
       "name": "deploycluster",
@@ -61,9 +68,13 @@
           "uri": "[concat(parameters('_artifactsLocation'), '/', variables('deployclusterTemplateFolder'), '/', variables('deployclusterTemplateFileName'), parameters('_artifactsSAS'))]",
           "contentVersion": "1.0.0.0"
         },
-        "parametersLink": {
-          "uri": "[concat(parameters('_artifactsLocation'), '/', variables('deployclusterTemplateFolder'), '/', variables('deployclusterTemplateParametersFileName'), parameters('_artifactsSAS'))]",
-          "contentVersion": "1.0.0.0"
+        "parameters": {
+          "clusterName": { "value": "[parameters('clusterName')]" },
+          "adminUsername": { "value": "[parameters('adminUsername')]" },
+          "adminPassword": { "value": "[parameters('adminPassword')]" },
+          "certificateThumbprint": { "value": "[parameters('certificateThumbprint')]" },
+          "sourceVaultResourceId": { "value": "[parameters('sourceVaultResourceId')]" },
+          "certificateUrlValue": { "value": "[parameters('certificateUrlValue')]" }
         }
       }
     }

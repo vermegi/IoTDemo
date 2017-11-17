@@ -22,13 +22,7 @@ Param(
   [string]$ResourcePrefix,
 
   [Parameter(Mandatory=$True)]
-  [string]$ClusterName,
-
-  [Parameter(Mandatory=$True)]
-  [string]$AdminUsername,
-
-  [Parameter(Mandatory=$True)]
-  [string]$AdminPwd
+  [string]$ClusterName
 )
 
 Select-AzureRmSubscription -SubscriptionName $SubscriptionName
@@ -88,7 +82,7 @@ $paramsFile = @{
         'clusterName' =  @{
             value = "$ClusterName"
             }
-       'adminUsername' =  @{
+        'adminUsername' =  @{
          reference = @{
            keyVault = @{
              id = $keyVaultId
@@ -121,3 +115,17 @@ $paramsFile = @{
         }   
     }       
 }
+
+$paramsFilePath = "$scriptDir\templates\azuredeploy.parameters.json"
+Write-Host "Temp params file to be written to: $paramsFilePath"
+$paramsFile | ConvertTo-Json -Depth 5 | Out-File $paramsFilePath
+
+# Deploy ARM template
+New-AzureRmResourceGroupDeployment -Verbose -Force -ErrorAction Stop `
+   -Name "iotdemodeploy" `
+   -ResourceGroupName $RGName `
+   -TemplateFile "$scriptDir/templates/azuredeploy.json" `
+   -TemplateParameterFile $paramsFilePath 
+
+
+ Remove-Item -Path $paramsFilePath
