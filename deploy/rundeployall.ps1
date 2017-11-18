@@ -1,0 +1,1 @@
+.\deploy-all.ps1 -SubscriptionName 'Gitte Vermeiren Azure Internal Consumption' -RGName 'iotdemo_rg' -StorageAccountNameDeploy 'iotdemogitte' -Location 'West Europe' -KeyVaultRGName 'iotdemo_rg' -KeyVaultName 'iotkeyvaultgitte' -ResourcePrefix 'iotdemo' -ClusterName 'iotgitte' -ServiceBusNamespaceName 'iotdemogittesbns' -IotHubName 'iotdemogittehub'

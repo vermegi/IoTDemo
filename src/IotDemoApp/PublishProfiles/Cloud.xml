@@ -20,6 +20,6 @@
                                     AzureActiveDirectory="true"
                                     ServerCertThumbprint="0123456789012345678901234567890123456789" />
   -->
-  <ClusterConnectionParameters ConnectionEndpoint="" />
+  <ClusterConnectionParameters ConnectionEndpoint="iotgitte.westeurope.cloudapp.azure.com:19000" X509Credential="true" ServerCertThumbprint="D07E8C71FBD5F793B010D78B4A959FE7D8EC9214" FindType="FindByThumbprint" FindValue="D07E8C71FBD5F793B010D78B4A959FE7D8EC9214" StoreLocation="CurrentUser" StoreName="My" />
   <ApplicationParameterFile Path="..\ApplicationParameters\Cloud.xml" />
 </PublishProfile>
