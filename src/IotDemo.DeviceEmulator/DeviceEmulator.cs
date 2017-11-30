@@ -38,6 +38,9 @@ namespace IotDemo.DeviceEmulator
 
             long iterations = 0;
 
+            //var connectionstring = "HostName=iotdemogittehub.azure-devices.net;SharedAccessKeyName=registryReadWrite;SharedAccessKey=uajb2qStqre9hgwPJ1dBY91rNn1h5Wo+dl305nHkVSs=";
+            //var registryManager = RegistryManager.
+
             while (true)
             {
                 cancellationToken.ThrowIfCancellationRequested();

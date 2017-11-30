@@ -133,7 +133,7 @@ $paramsFile = @{
     }       
 }
 
-$paramsFilePath = "$scriptDir\templates\azuredeploy.parameters.json"
+$paramsFilePath = "$scriptDir\..\..\azuredeploy.parameters.json"
 Write-Host "Temp params file to be written to: $paramsFilePath"
 $paramsFile | ConvertTo-Json -Depth 5 | Out-File $paramsFilePath
 
