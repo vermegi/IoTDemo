@@ -28,9 +28,17 @@ Param(
   [string]$ServiceBusNamespaceName,
 
   [Parameter(Mandatory=$True)]
-  [string]$IotHubName
+  [string]$IotHubName,
 
-)
+  [Parameter(Mandatory=$True)]
+  [string]$TenantId,
+
+  [Parameter(Mandatory=$True)]
+  [string]$ClusterApplication,
+
+  [Parameter(Mandatory=$True)]
+  [string]$ClientApplication
+  )
 
 Select-AzureRmSubscription -SubscriptionName $SubscriptionName
 Write-Host "Selected subscription: $SubscriptionName"
@@ -123,13 +131,25 @@ $paramsFile = @{
         'iotHubName' = @{
           value = $IotHubName
         }
-		'_artifactsLocation' = @{
+		    '_artifactsLocation' = @{
           value = $templatesContainerUri
         }
 
         '_artifactsSAS' = @{
           value = $templatesContainerSas
-        }   
+        }  
+        
+        'tenantId' = @{
+          value = $TenantId
+        }
+
+        'clusterApplication' = @{
+          value = $ClusterApplication
+        }
+
+        'clientApplication' = @{
+          value = $ClientApplication
+        }
     }       
 }
 

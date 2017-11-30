@@ -67,6 +67,15 @@
     },
     "_artifactsSAS": {
       "type": "string"
+    },
+    "tenantId":{
+      "type": "string"
+    },
+    "clusterApplication":{
+      "type": "string"
+    },
+    "clientApplication":{
+      "type": "string"
     }
   },
   "variables": {
@@ -94,7 +103,10 @@
           "adminPassword": { "value": "[parameters('adminPassword')]" },
           "certificateThumbprint": { "value": "[parameters('certificateThumbprint')]" },
           "sourceVaultResourceId": { "value": "[parameters('sourceVaultResourceId')]" },
-          "certificateUrlValue": { "value": "[parameters('certificateUrlValue')]" }
+          "certificateUrlValue": { "value": "[parameters('certificateUrlValue')]" },
+          "tenantId": { "value": "[parameters('tenantId')]" },
+          "clusterApplication": { "value": "[parameters('clusterApplication')]" },
+          "clientApplication": { "value": "[parameters('clientApplication')]" }
         }
       }
     },

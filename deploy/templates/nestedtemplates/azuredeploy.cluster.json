@@ -132,6 +132,15 @@
         "metadata": {
           "description": "The VM size to use for cluster nodes."
         }
+      },
+      "tenantId":{
+        "type": "string"
+      },
+      "clusterApplication":{
+        "type": "string"
+      },
+      "clientApplication":{
+        "type": "string"
       }
     },
     "variables": {
@@ -584,9 +593,9 @@
             "x509StoreName": "[parameters('certificateStoreValue')]"
           },
           "azureActiveDirectory": {
-            "tenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47",
-            "clusterApplication": "031219c7-c617-47df-8c8f-259f70023602",
-            "clientApplication": "4285162c-5278-42c3-b18e-7d038b35d488"
+            "tenantId": "[parameters('tenantId')]",
+            "clusterApplication": "[parameters('clusterApplication')]",
+            "clientApplication": "[parameters('clientApplication')]"
           },
           "clientCertificateCommonNames": [],
           "clientCertificateThumbprints": [],
