@@ -72,7 +72,7 @@ If all goes well, you should now (it takes some time, so be patient) have the ne
 
 ## Getting the code in Azure
 
-Open the src/IoTDemoApp.sln in Visual Sturio 2017. Right mouse click on the IoTDemoApp, select 'Publish'. In the popup window, select your newly created cluster and click Ok. This should now publish all services to the ServiceFabric cluster. 
+Open the src/IoTDemoApp.sln in Visual Sturio 2017 and build it. Right mouse click on the IoTDemoApp, select 'Publish'. In the popup window, select your newly created cluster and click Ok. This should now publish all services to the ServiceFabric cluster. 
 
 You're up and running. 
 

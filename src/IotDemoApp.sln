@@ -7,22 +7,38 @@ Project("{A07B5EB6-E848-4116-A8D0-A826331D98C6}") = "IotDemoApp", "IotDemoApp\Io
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IotDemo.DeviceEmulator", "IotDemo.DeviceEmulator\IotDemo.DeviceEmulator.csproj", "{9D03AFE8-F0ED-4197-8356-B168CC94FF2B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdminPortal", "AdminPortal\AdminPortal.csproj", "{42B949AE-856B-4751-AF36-97F0C7C420E8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3DF7ADD2-8DBB-4B88-898C-27635C106098}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{3DF7ADD2-8DBB-4B88-898C-27635C106098}.Debug|x64.ActiveCfg = Debug|x64
 		{3DF7ADD2-8DBB-4B88-898C-27635C106098}.Debug|x64.Build.0 = Debug|x64
 		{3DF7ADD2-8DBB-4B88-898C-27635C106098}.Debug|x64.Deploy.0 = Debug|x64
+		{3DF7ADD2-8DBB-4B88-898C-27635C106098}.Release|Any CPU.ActiveCfg = Release|x64
 		{3DF7ADD2-8DBB-4B88-898C-27635C106098}.Release|x64.ActiveCfg = Release|x64
 		{3DF7ADD2-8DBB-4B88-898C-27635C106098}.Release|x64.Build.0 = Release|x64
 		{3DF7ADD2-8DBB-4B88-898C-27635C106098}.Release|x64.Deploy.0 = Release|x64
+		{9D03AFE8-F0ED-4197-8356-B168CC94FF2B}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{9D03AFE8-F0ED-4197-8356-B168CC94FF2B}.Debug|x64.ActiveCfg = Debug|x64
 		{9D03AFE8-F0ED-4197-8356-B168CC94FF2B}.Debug|x64.Build.0 = Debug|x64
+		{9D03AFE8-F0ED-4197-8356-B168CC94FF2B}.Release|Any CPU.ActiveCfg = Release|x64
 		{9D03AFE8-F0ED-4197-8356-B168CC94FF2B}.Release|x64.ActiveCfg = Release|x64
 		{9D03AFE8-F0ED-4197-8356-B168CC94FF2B}.Release|x64.Build.0 = Release|x64
+		{42B949AE-856B-4751-AF36-97F0C7C420E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42B949AE-856B-4751-AF36-97F0C7C420E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42B949AE-856B-4751-AF36-97F0C7C420E8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{42B949AE-856B-4751-AF36-97F0C7C420E8}.Debug|x64.Build.0 = Debug|Any CPU
+		{42B949AE-856B-4751-AF36-97F0C7C420E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42B949AE-856B-4751-AF36-97F0C7C420E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42B949AE-856B-4751-AF36-97F0C7C420E8}.Release|x64.ActiveCfg = Release|Any CPU
+		{42B949AE-856B-4751-AF36-97F0C7C420E8}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

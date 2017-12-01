@@ -166,3 +166,5 @@ New-AzureRmResourceGroupDeployment -Verbose -Force -ErrorAction Stop `
 
 
  Remove-Item -Path $paramsFilePath
+
+ 

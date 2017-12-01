@@ -32,6 +32,7 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AdminPortal\AdminPortal.csproj" />
     <ProjectReference Include="..\IotDemo.DeviceEmulator\IotDemo.DeviceEmulator.csproj" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />

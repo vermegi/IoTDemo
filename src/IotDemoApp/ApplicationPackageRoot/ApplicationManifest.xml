@@ -1,11 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ApplicationManifest xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ApplicationTypeName="IotDemoAppType" ApplicationTypeVersion="1.0.0" xmlns="http://schemas.microsoft.com/2011/01/fabric">
   <Parameters>
+    <Parameter Name="AdminPortal_InstanceCount" DefaultValue="-1" />
     <Parameter Name="IotDemo.DeviceEmulator_InstanceCount" DefaultValue="-1" />
   </Parameters>
   <!-- Import the ServiceManifest from the ServicePackage. The ServiceManifestName and ServiceManifestVersion 
        should match the Name and Version attributes of the ServiceManifest element defined in the 
        ServiceManifest.xml file. -->
+  <ServiceManifestImport>
+    <ServiceManifestRef ServiceManifestName="AdminPortalPkg" ServiceManifestVersion="1.0.0" />
+    <ConfigOverrides />
+  </ServiceManifestImport>
   <ServiceManifestImport>
     <ServiceManifestRef ServiceManifestName="IotDemo.DeviceEmulatorPkg" ServiceManifestVersion="1.0.0" />
     <ConfigOverrides />
@@ -21,5 +26,10 @@
         <SingletonPartition />
       </StatelessService>
     </Service>-->
+    <Service Name="AdminPortal" ServicePackageActivationMode="ExclusiveProcess">
+      <StatelessService ServiceTypeName="AdminPortalType" InstanceCount="[AdminPortal_InstanceCount]">
+        <SingletonPartition />
+      </StatelessService>
+    </Service>
   </DefaultServices>
 </ApplicationManifest>
