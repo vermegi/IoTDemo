@@ -108,6 +108,10 @@
           "events": {
             "retentionTimeInDays": "[parameters('d2cMessageRetentionInDaysPeriod')]",
             "partitionCount": "[parameters('d2cPartitionCount')]"
+          },
+          "operationsMonitoringEvents": {
+            "retentionTimeInDays": "[parameters('d2cMessageRetentionInDaysPeriod')]",
+            "partitionCount": "[parameters('d2cPartitionCount')]"
           }
         },
         "cloudToDevice": {
