@@ -4,6 +4,8 @@ This project sets up a IoT pipeline in Azure, demonstrating a couple of Azure co
 
 Additionally this repo contains code for getting a pipeling going in ServiceFabric with the Actor model.
 
+This is totally build on the work of others. Starting from the [Azure Quickstart Templates](https://github.com/Azure/azure-quickstart-templates), and the [Azure Samples](https://github.com/Azure-Samples) for [ServiceFabric](https://github.com/Azure-Samples/service-fabric-dotnet-iot). 
+
 This is a work in progress! 
 
 ## Getting The Infra Ready
