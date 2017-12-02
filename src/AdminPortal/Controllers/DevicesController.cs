@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using IotDemo.DeviceEmulator;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.ServiceFabric.Services.Remoting.Client;
 using System.Net.Http;
 using System.Threading.Tasks;
+
 
 namespace AdminPortal.Controllers
 {
@@ -21,20 +21,28 @@ namespace AdminPortal.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var result = new { CreatingDevices = false, SendingData = true };
+            var deviceEmulatorClient = ServiceProxy.Create<IDeviceEmulatorService>(new System.Uri("fabric:/IotDemoApp/IotDemo.DeviceEmulator"));
 
-            return Json(result);
+            var status = deviceEmulatorClient.GetStatus();
+
+            return Json(status);
         }
 
         [HttpPut("togglecreate")]
         public async Task<IActionResult> ToggleCreateDevices()
         {
+            var deviceEmulatorClient = ServiceProxy.Create<IDeviceEmulatorService>(new System.Uri("fabric:/IotDemoApp/IotDemo.DeviceEmulator"));
+            deviceEmulatorClient.ToggleCreateDevices();
+
             return Ok();
         }
 
         [HttpPut("togglesend")]
         public async Task<IActionResult> ToggleSendDataFromDevices()
         {
+            var deviceEmulatorClient = ServiceProxy.Create<IDeviceEmulatorService>(new System.Uri("fabric:/IotDemoApp/IotDemo.DeviceEmulator"));
+            deviceEmulatorClient.ToggleSendData();
+
             return Ok();
         }
     }

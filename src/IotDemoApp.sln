@@ -7,7 +7,7 @@ Project("{A07B5EB6-E848-4116-A8D0-A826331D98C6}") = "IotDemoApp", "IotDemoApp\Io
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IotDemo.DeviceEmulator", "IotDemo.DeviceEmulator\IotDemo.DeviceEmulator.csproj", "{9D03AFE8-F0ED-4197-8356-B168CC94FF2B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdminPortal", "AdminPortal\AdminPortal.csproj", "{42B949AE-856B-4751-AF36-97F0C7C420E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminPortal", "AdminPortal\AdminPortal.csproj", "{42B949AE-856B-4751-AF36-97F0C7C420E8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

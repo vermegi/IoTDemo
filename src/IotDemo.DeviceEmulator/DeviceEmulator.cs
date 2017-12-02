@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
+using Microsoft.ServiceFabric.Services.Remoting;
+using Microsoft.ServiceFabric.Services.Remoting.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
 using Microsoft.Azure.Devices;
 using Microsoft.Azure.Devices.Client;
@@ -14,13 +16,23 @@ using System.Text;
 
 namespace IotDemo.DeviceEmulator
 {
+    public interface IDeviceEmulatorService : IService
+    {
+        Task ToggleCreateDevices();
+        Task  ToggleSendData();
+
+        Task<DeviceEmulatorData> GetStatus();
+    }
+
     /// <summary>
     /// An instance of this class is created for each service instance by the Service Fabric runtime.
     /// </summary>
-    internal sealed class DeviceEmulator : StatelessService
+    internal sealed class DeviceEmulator : StatelessService, IDeviceEmulatorService
     {
         private string _connectionstring = "HostName=iotdemogittehub.azure-devices.net;SharedAccessKeyName=registryReadWrite;SharedAccessKey=uajb2qStqre9hgwPJ1dBY91rNn1h5Wo+dl305nHkVSs=";
         private RegistryManager _registryManager;
+        private bool _creatingDevices = false;
+        private bool _sendingData = false;
 
         public DeviceEmulator(StatelessServiceContext context)
             : base(context)
@@ -32,7 +44,7 @@ namespace IotDemo.DeviceEmulator
         /// <returns>A collection of listeners.</returns>
         protected override IEnumerable<ServiceInstanceListener> CreateServiceInstanceListeners()
         {
-            return new ServiceInstanceListener[0];
+            return new[] { new ServiceInstanceListener(context => this.CreateServiceRemotingListener(context) ) };
         }
 
         private RegistryManager MyRegistryManager
@@ -62,8 +74,10 @@ namespace IotDemo.DeviceEmulator
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                await RegisterSomeDevices();
-                await SendDataFromSomeDevices();
+                if (_creatingDevices)
+                    await RegisterSomeDevices();
+                if (_sendingData)
+                    await SendDataFromSomeDevices();
 
                 ServiceEventSource.Current.ServiceMessage(this.Context, "Working-{0}", ++iterations);
 
@@ -166,6 +180,25 @@ namespace IotDemo.DeviceEmulator
             catch (Microsoft.Azure.Devices.Common.Exceptions.DeviceAlreadyExistsException)
             {
             }
+        }
+
+        public Task ToggleCreateDevices()
+        {
+            _creatingDevices = !_creatingDevices;
+            ServiceEventSource.Current.ServiceMessage(Context, "ToggleCreateDevices: {0}", _creatingDevices);
+            return Task.FromResult<object>(null);
+        }
+
+        public Task ToggleSendData()
+        {
+            _sendingData = !_sendingData;
+            ServiceEventSource.Current.ServiceMessage(Context, "ToggleSendData: {0}", _sendingData);
+            return Task.FromResult<object>(null);
+        }
+
+        public Task<DeviceEmulatorData> GetStatus()
+        {
+            return Task.FromResult(new DeviceEmulatorData { CreatingDevices = _creatingDevices, SendingData = _sendingData });
         }
     }
 }
