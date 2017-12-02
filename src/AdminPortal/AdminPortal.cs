@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.ServiceFabric.Services.Communication.AspNetCore;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
+using System.Net.Http;
 
 namespace AdminPortal
 {
@@ -39,7 +40,8 @@ namespace AdminPortal
                                     .UseWebListener()
                                     .ConfigureServices(
                                         services => services
-                                            .AddSingleton<StatelessServiceContext>(serviceContext))
+                                            .AddSingleton<StatelessServiceContext>(serviceContext)
+                                            .AddSingleton<HttpClient>())
                                     .UseContentRoot(Directory.GetCurrentDirectory())
                                     .UseStartup<Startup>()
                                     .UseApplicationInsights()

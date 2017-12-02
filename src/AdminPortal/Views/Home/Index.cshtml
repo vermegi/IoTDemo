@@ -6,15 +6,27 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-xs-8 col-xs-offset-2 text-center">
-                Service Fabric IoT Demo
+                <h1>Service Fabric IoT Demov</h1>
             </div>
         </div>
 
         <div class="row">
             <div class="col-xs-8 col-xs-offset-2">
-                <form class="col-xs-12 center-block">
-
-                </form>
+                <div class="checkbox" ng-click="toggleCreateDevices()" >
+                    <label>
+                        <input type="checkbox" ng-checked="creatingDevices" />
+                        Creating devices
+                    </label>
+                </div>
+                <div class="checkbox" ng-click="toggleSendDataFromDevices()">
+                    <label>
+                        <input type="checkbox" ng-checked="sendingData" />
+                        Sending data from devices
+                    </label>
+                </div>
             </div>
         </div>
+    </div>
 </div>
+
+
