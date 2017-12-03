@@ -1,12 +1,25 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ApplicationManifest xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ApplicationTypeName="IotDemoAppType" ApplicationTypeVersion="1.0.0" xmlns="http://schemas.microsoft.com/2011/01/fabric">
   <Parameters>
+    <Parameter Name="IoTDemo.RouterService_MinReplicaSetSize" DefaultValue="3" />
+    <Parameter Name="IoTDemo.RouterService_PartitionCount" DefaultValue="1" />
+    <Parameter Name="IoTDemo.RouterService_TargetReplicaSetSize" DefaultValue="3" />
     <Parameter Name="AdminPortal_InstanceCount" DefaultValue="-1" />
     <Parameter Name="IotDemo.DeviceEmulator_InstanceCount" DefaultValue="-1" />
+    <Parameter Name="IoTDeviceActorService_PartitionCount" DefaultValue="10" />
+    <Parameter Name="IoTDeviceActorService_MinReplicaSetSize" DefaultValue="3" />
+    <Parameter Name="IoTDeviceActorService_TargetReplicaSetSize" DefaultValue="3" />
   </Parameters>
   <!-- Import the ServiceManifest from the ServicePackage. The ServiceManifestName and ServiceManifestVersion 
        should match the Name and Version attributes of the ServiceManifest element defined in the 
        ServiceManifest.xml file. -->
+  <ServiceManifestImport>
+    <ServiceManifestRef ServiceManifestName="IoTDemo.IoTDeviceActorPkg" ServiceManifestVersion="1.0.0" />
+  </ServiceManifestImport>
+  <ServiceManifestImport>
+    <ServiceManifestRef ServiceManifestName="IoTDemo.RouterServicePkg" ServiceManifestVersion="1.0.0" />
+    <ConfigOverrides />
+  </ServiceManifestImport>
   <ServiceManifestImport>
     <ServiceManifestRef ServiceManifestName="AdminPortalPkg" ServiceManifestVersion="1.0.0" />
     <ConfigOverrides />
@@ -16,6 +29,11 @@
     <ConfigOverrides />
   </ServiceManifestImport>
   <DefaultServices>
+    <Service Name="IoTDemo.RouterService">
+      <StatefulService ServiceTypeName="IoTDemo.RouterServiceType" TargetReplicaSetSize="[IoTDemo.RouterService_TargetReplicaSetSize]" MinReplicaSetSize="[IoTDemo.RouterService_MinReplicaSetSize]">
+        <UniformInt64Partition PartitionCount="[IoTDemo.RouterService_PartitionCount]" LowKey="-9223372036854775808" HighKey="9223372036854775807" />
+      </StatefulService>
+    </Service>
     <Service Name="IotDemo.DeviceEmulator">
       <StatelessService ServiceTypeName="IotDemo.DeviceEmulatorType" InstanceCount="[IotDemo.DeviceEmulator_InstanceCount]">
         <SingletonPartition />
@@ -30,6 +48,11 @@
       <StatelessService ServiceTypeName="AdminPortalType" InstanceCount="[AdminPortal_InstanceCount]">
         <SingletonPartition />
       </StatelessService>
+    </Service>
+    <Service Name="IoTDeviceActorService" GeneratedIdRef="0d9a397d-f00e-4856-af5f-d06a3bdb7c08|Persisted">
+      <StatefulService ServiceTypeName="IoTDeviceActorServiceType" TargetReplicaSetSize="[IoTDeviceActorService_TargetReplicaSetSize]" MinReplicaSetSize="[IoTDeviceActorService_MinReplicaSetSize]">
+        <UniformInt64Partition PartitionCount="[IoTDeviceActorService_PartitionCount]" LowKey="-9223372036854775808" HighKey="9223372036854775807" />
+      </StatefulService>
     </Service>
   </DefaultServices>
 </ApplicationManifest>

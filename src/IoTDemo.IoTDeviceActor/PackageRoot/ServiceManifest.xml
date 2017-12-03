@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ServiceManifest xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="IoTDemo.IoTDeviceActorPkg" Version="1.0.0" xmlns="http://schemas.microsoft.com/2011/01/fabric">
+  <ServiceTypes>
+    <StatefulServiceType ServiceTypeName="IoTDeviceActorServiceType" HasPersistedState="true">
+      <Extensions>
+        <Extension Name="__GeneratedServiceType__" GeneratedId="0d9a397d-f00e-4856-af5f-d06a3bdb7c08|Persisted">
+          <GeneratedNames xmlns="http://schemas.microsoft.com/2015/03/fabact-no-schema">
+            <DefaultService Name="IoTDeviceActorService" />
+            <ServiceEndpoint Name="IoTDeviceActorServiceEndpoint" />
+            <ReplicatorEndpoint Name="IoTDeviceActorServiceReplicatorEndpoint" />
+            <ReplicatorConfigSection Name="IoTDeviceActorServiceReplicatorConfig" />
+            <ReplicatorSecurityConfigSection Name="IoTDeviceActorServiceReplicatorSecurityConfig" />
+            <StoreConfigSection Name="IoTDeviceActorServiceLocalStoreConfig" />
+          </GeneratedNames>
+        </Extension>
+      </Extensions>
+    </StatefulServiceType>
+  </ServiceTypes>
+  <CodePackage Name="Code" Version="1.0.0">
+    <EntryPoint>
+      <ExeHost>
+        <Program>IoTDemo.IoTDeviceActor.exe</Program>
+      </ExeHost>
+    </EntryPoint>
+  </CodePackage>
+  <ConfigPackage Name="Config" Version="1.0.0" />
+  <Resources>
+    <Endpoints>
+      <Endpoint Name="IoTDeviceActorServiceEndpoint" />
+      <Endpoint Name="IoTDeviceActorServiceReplicatorEndpoint" />
+    </Endpoints>
+  </Resources>
+  <!-- The content will be generated during build -->
+</ServiceManifest>
