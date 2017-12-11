@@ -148,6 +148,8 @@ namespace IotDemo.DeviceEmulator
                 message.Properties.Add("DeviceID", deviceId);
                 message.Properties.Add("Temparature", "45");
                 message.Properties.Add("FanSpeed", "256");
+                message.Properties.Add("IsOnline", "true");
+                //message.Properties.Add("GatewayId", "1234"); --> SiteId (RegistrationMessage)
 
                 await deviceClient.SendEventAsync(message);
 

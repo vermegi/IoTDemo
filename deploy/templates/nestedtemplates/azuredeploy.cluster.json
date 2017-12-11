@@ -465,6 +465,7 @@
                       "WadCfg": {
                         "DiagnosticMonitorConfiguration": {
                           "overallQuotaInMB": "50000",
+                          "sinks": "applicationInsights",
                           "EtwProviders": {
                             "EtwEventSourceProviderConfiguration": [
                               {
@@ -481,6 +482,13 @@
                                 "DefaultEvents": {
                                   "eventDestination": "ServiceFabricReliableServiceEventTable"
                                 }
+                              },
+                              {
+                                "provider": "MyCompany-IotDemoApp-IoTDemo.RouterService",
+                                "scheduledTransferPeriod": "PT5M",
+                                "DefaultEvents": {
+                                "eventDestination": "RouterServiceEventTable"
+                                }
                               }
                             ],
                             "EtwManifestProviderConfiguration": [
@@ -495,7 +503,15 @@
                               }
                             ]
                           }
-                        }
+                        },
+                        "SinksConfig": {
+                          "Sink": [
+                              {
+                                  "name": "applicationInsights",
+                                  "ApplicationInsights": "48c962fa-a0ee-4a9d-a464-5bc6651e50ce"
+                              }
+                          ]
+                      }
                       },
                       "StorageAccount": "[variables('applicationDiagnosticsStorageAccountName')]"
                     },

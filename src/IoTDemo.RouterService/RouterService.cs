@@ -49,7 +49,7 @@ namespace IoTDemo.RouterService
         /// <param name="cancellationToken">Canceled when Service Fabric needs to shut down this service replica.</param>
         protected override async Task RunAsync(CancellationToken cancellationToken)
         {
-            string iotHubConnectionstring = "HostName=iotdemogittehub.azure-devices.net;SharedAccessKeyName=registryReadWrite;SharedAccessKey=uajb2qStqre9hgwPJ1dBY91rNn1h5Wo+dl305nHkVSs=";
+            string iotHubConnectionstring = "HostName=iotdemogittehub.azure-devices.net;SharedAccessKeyName=service;SharedAccessKey=dUgqwEJE1K2YcQozHO5N+LnamsBH3dzkFzaoL0CGx9g=";
 
             // These Reliable Dictionaries are used to keep track of our position in IoT Hub.
             // If this service fails over, this will allow it to pick up where it left off in the event stream.
@@ -76,6 +76,9 @@ namespace IoTDemo.RouterService
                 eventHubReceiver = iotHubInfo.Item1;
                 messagingFactory = iotHubInfo.Item2;
 
+                if (eventHubReceiver == null || messagingFactory == null)
+                    return;
+
                 int offsetIteration = 0;
 
                 while (true)
@@ -97,7 +100,7 @@ namespace IoTDemo.RouterService
 
                             string deviceId = (string)eventData.Properties["DeviceID"];
 
-                            var deviceactorProxy = ActorProxy.Create<IIoTDeviceActor>(new ActorId(deviceId), new Uri("fabric:/IoTDemoApp/IoTDeviceActor"));
+                            var deviceactorProxy = ActorProxy.Create<IIoTDeviceActor>(new ActorId(deviceId), new Uri("fabric:/IotDemoApp/IoTDeviceActorService"));
                             await deviceactorProxy.SendDeviceMessage((string)eventData.Properties["Temparature"], cancellationToken);
 
                             ServiceEventSource.Current.ServiceMessage(
@@ -184,71 +187,81 @@ namespace IoTDemo.RouterService
             IReliableDictionary<string, long> epochDictionary,
             IReliableDictionary<string, string> offsetDictionary)
         {
-            // EventHubs doesn't support NetMessaging, so ensure the transport type is AMQP.
-            var connectionStringBuilder = new ServiceBusConnectionStringBuilder(connectionString);
-            connectionStringBuilder.TransportType = TransportType.Amqp;
-
-            ServiceEventSource.Current.ServiceMessage(
-                Context,
-                "RouterService connecting to IoT Hub at {0}",
-                String.Join(",", connectionStringBuilder.Endpoints.Select(x => x.ToString())));
-
-            // A new MessagingFactory is created here so that each partition of this service will have its own MessagingFactory.
-            // This gives each partition its own dedicated TCP connection to IoT Hub.
-            var messagingFactory = MessagingFactory.CreateFromConnectionString(connectionStringBuilder.ToString());
-            var eventHubClient = messagingFactory.CreateEventHubClient("messages/events");
-            var eventHubRuntimeInfo = await eventHubClient.GetRuntimeInformationAsync();
-            EventHubReceiver eventHubReceiver;
-
-            // Get an IoT Hub partition ID that corresponds to this partition's low key.
-            // This assumes that this service has a partition count 'n' that is equal to the IoT Hub partition count and a partition range of 0..n-1.
-            // For example, given an IoT Hub with 32 partitions, this service should be created with:
-            // partition count = 32
-            // partition range = 0..31
-            string eventHubPartitionId = eventHubRuntimeInfo.PartitionIds[servicePartitionKey];
-
-            using (var tx = StateManager.CreateTransaction())
+            try
             {
-                var offsetResult = await offsetDictionary.TryGetValueAsync(tx, "offset", LockMode.Default);
-                var epochResult = await epochDictionary.TryGetValueAsync(tx, "epoch", LockMode.Update);
 
-                long newEpoch = epochResult.HasValue
-                    ? epochResult.Value + 1
-                    : 0;
 
-                if (offsetResult.HasValue)
+                // EventHubs doesn't support NetMessaging, so ensure the transport type is AMQP.
+                var connectionStringBuilder = new ServiceBusConnectionStringBuilder(connectionString);
+                connectionStringBuilder.TransportType = TransportType.Amqp;
+
+                ServiceEventSource.Current.ServiceMessage(
+                    Context,
+                    "RouterService connecting to IoT Hub at {0}",
+                    String.Join(",", connectionStringBuilder.Endpoints.Select(x => x.ToString())));
+
+                // A new MessagingFactory is created here so that each partition of this service will have its own MessagingFactory.
+                // This gives each partition its own dedicated TCP connection to IoT Hub.
+                var messagingFactory = MessagingFactory.CreateFromConnectionString(connectionStringBuilder.ToString());
+                var eventHubClient = messagingFactory.CreateEventHubClient("messages/events");
+                var eventHubRuntimeInfo = await eventHubClient.GetRuntimeInformationAsync();
+                EventHubReceiver eventHubReceiver;
+
+                // Get an IoT Hub partition ID that corresponds to this partition's low key.
+                // This assumes that this service has a partition count 'n' that is equal to the IoT Hub partition count and a partition range of 0..n-1.
+                // For example, given an IoT Hub with 32 partitions, this service should be created with:
+                // partition count = 32
+                // partition range = 0..31
+                string eventHubPartitionId = eventHubRuntimeInfo.PartitionIds[servicePartitionKey];
+
+                using (var tx = StateManager.CreateTransaction())
                 {
-                    // continue where the service left off before the last failover or restart.
-                    ServiceEventSource.Current.ServiceMessage(
-                        Context,
-                        "Creating EventHub listener on partition {0} with offset {1}",
-                        eventHubPartitionId,
-                        offsetResult.Value);
+                    var offsetResult = await offsetDictionary.TryGetValueAsync(tx, "offset", LockMode.Default);
+                    var epochResult = await epochDictionary.TryGetValueAsync(tx, "epoch", LockMode.Update);
 
-                    eventHubReceiver = await eventHubClient.GetDefaultConsumerGroup().CreateReceiverAsync(eventHubPartitionId, offsetResult.Value, newEpoch);
+                    long newEpoch = epochResult.HasValue
+                        ? epochResult.Value + 1
+                        : 0;
+
+                    if (offsetResult.HasValue)
+                    {
+                        // continue where the service left off before the last failover or restart.
+                        ServiceEventSource.Current.ServiceMessage(
+                            Context,
+                            "Creating EventHub listener on partition {0} with offset {1}",
+                            eventHubPartitionId,
+                            offsetResult.Value);
+
+                        eventHubReceiver = await eventHubClient.GetDefaultConsumerGroup().CreateReceiverAsync(eventHubPartitionId, offsetResult.Value, newEpoch);
+                    }
+                    else
+                    {
+                        // first time this service is running so there is no offset value yet.
+                        // start with the current time.
+                        ServiceEventSource.Current.ServiceMessage(
+                            Context,
+                            "Creating EventHub listener on partition {0} with offset {1}",
+                            eventHubPartitionId,
+                            DateTime.UtcNow);
+
+                        eventHubReceiver =
+                            await
+                                eventHubClient.GetDefaultConsumerGroup()
+                                    .CreateReceiverAsync(eventHubPartitionId, DateTime.UtcNow, newEpoch);
+                    }
+
+                    // epoch is recorded each time the service fails over or restarts.
+                    await epochDictionary.SetAsync(tx, "epoch", newEpoch);
+                    await tx.CommitAsync();
                 }
-                else
-                {
-                    // first time this service is running so there is no offset value yet.
-                    // start with the current time.
-                    ServiceEventSource.Current.ServiceMessage(
-                        Context,
-                        "Creating EventHub listener on partition {0} with offset {1}",
-                        eventHubPartitionId,
-                        DateTime.UtcNow);
 
-                    eventHubReceiver =
-                        await
-                            eventHubClient.GetDefaultConsumerGroup()
-                                .CreateReceiverAsync(eventHubPartitionId, DateTime.UtcNow, newEpoch);
-                }
-
-                // epoch is recorded each time the service fails over or restarts.
-                await epochDictionary.SetAsync(tx, "epoch", newEpoch);
-                await tx.CommitAsync();
+                return new Tuple<EventHubReceiver, MessagingFactory>(eventHubReceiver, messagingFactory);
             }
-
-            return new Tuple<EventHubReceiver, MessagingFactory>(eventHubReceiver, messagingFactory);
+            catch(Exception exc)
+            {
+                ServiceEventSource.Current.ServiceMessage(Context, "couldn't create eventhub listener: {0}", exc.Message);
+            }
+            return new Tuple<EventHubReceiver, MessagingFactory>(null, null);
         }
 
     }
