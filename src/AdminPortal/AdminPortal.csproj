@@ -14,8 +14,8 @@
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.1.2" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.2" />
     <PackageReference Include="Microsoft.ServiceFabric" Version="6.0.232" />
-    <PackageReference Include="Microsoft.ServiceFabric.AspNetCore.WebListener" Version="2.7.198" />
-    <PackageReference Include="Microsoft.ServiceFabric.Data" Version="2.7.198" />
+    <PackageReference Include="Microsoft.ServiceFabric.AspNetCore.WebListener" Version="2.8.232" />
+    <PackageReference Include="Microsoft.ServiceFabric.Data" Version="2.8.232" />
     <PackageReference Include="Microsoft.ServiceFabric.Diagnostics.Internal" Version="2.8.232" />
     <PackageReference Include="Microsoft.ServiceFabric.Services" Version="2.8.232" />
     <PackageReference Include="Microsoft.ServiceFabric.Services.Remoting" Version="2.8.232" />
