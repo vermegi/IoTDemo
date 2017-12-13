@@ -12,6 +12,7 @@ app.controller('DeviceEmulatorController', ['$rootScope', '$scope', '$http', '$t
                 $scope.creatingDevices = data.data.creatingDevices;
                 $scope.sendingData = data.data.sendingData;
             });
+        getActorList();
     };
 
     $scope.toggleCreateDevices = function () {
@@ -25,6 +26,13 @@ app.controller('DeviceEmulatorController', ['$rootScope', '$scope', '$http', '$t
         $http.put('api/Devices/togglesend')
             .then(function () {
                 $scope.refresh();
+            });
+    };
+
+    var getActorList = function () {
+        $http.get('api/Actors')
+            .then(function (data, status) {
+                $scope.actors = data.data;
             });
     };
 }]);

@@ -157,6 +157,7 @@
       "nt0ephemeralEndPort": "65534",
       "nt0fabricTcpGatewayPort": "19000",
       "nt0fabricHttpGatewayPort": "19080",
+      "adminPortalHttpGatewayPort": "6831",
       "subnet0Name": "Subnet-0",
       "subnet0Prefix": "10.0.0.0/24",
       "subnet0Ref": "[resourceId('Microsoft.Network/virtualNetworks/subnets/', variables('virtualNetworkName'), variables('subnet0Name'))]",
@@ -168,6 +169,7 @@
       "lbPoolID0": "[concat(variables('lbID0'),'/backendAddressPools/LoadBalancerBEAddressPool')]",
       "lbProbeID0": "[concat(variables('lbID0'),'/probes/FabricGatewayProbe')]",
       "lbHttpProbeID0": "[concat(variables('lbID0'),'/probes/FabricHttpGatewayProbe')]",
+      "adminPortalProbeID0": "[concat(variables('lbID0'),'/probes/adminPortalGatewayProbe')]",
       "lbNatPoolID0": "[concat(variables('lbID0'),'/inboundNatPools/LoadBalancerBEAddressNatPool')]",
       "vmNodeType0Name": "[toLower(concat('NT1', variables('vmName')))]",
       "vmNodeType0Size": "[parameters('nodeTypeSize')]"
@@ -292,6 +294,25 @@
               }
             },
             {
+              "name": "ddminPortal",
+              "properties": {
+                "backendAddressPool": {
+                  "id": "[variables('lbPoolID0')]"
+                },
+                "backendPort": "[variables('adminPortalHttpGatewayPort')]",
+                "enableFloatingIP": false,
+                "frontendIPConfiguration": {
+                  "id": "[variables('lbIPConfig0')]"
+                },
+                "frontendPort": "[variables('adminPortalHttpGatewayPort')]",
+                "idleTimeoutInMinutes": 5,
+                "probe": {
+                  "id": "[variables('adminPortalProbeID0')]"
+                },
+                "protocol": "Tcp"
+              }
+            },
+            {
               "name": "LBHttpRule",
               "properties": {
                 "backendAddressPool": {
@@ -360,6 +381,15 @@
               }
             },
             {
+              "name": "adminPortalGatewayProbe",
+              "properties": {
+                "intervalInSeconds": 5,
+                "numberOfProbes": 2,
+                "port": "[variables('adminPortalHttpGatewayPort')]",
+                "protocol": "Tcp"
+              }
+            },
+           {
               "name": "FabricHttpGatewayProbe",
               "properties": {
                 "intervalInSeconds": 5,
@@ -465,6 +495,7 @@
                       "WadCfg": {
                         "DiagnosticMonitorConfiguration": {
                           "overallQuotaInMB": "50000",
+                          "sinks": "applicationInsights",
                           "EtwProviders": {
                             "EtwEventSourceProviderConfiguration": [
                               {
@@ -481,6 +512,13 @@
                                 "DefaultEvents": {
                                   "eventDestination": "ServiceFabricReliableServiceEventTable"
                                 }
+                              },
+                              {
+                                "provider": "MyCompany-IotDemoApp-IoTDemo.RouterService",
+                                "scheduledTransferPeriod": "PT5M",
+                                "DefaultEvents": {
+                                "eventDestination": "RouterServiceEventTable"
+                                }
                               }
                             ],
                             "EtwManifestProviderConfiguration": [
@@ -495,7 +533,15 @@
                               }
                             ]
                           }
-                        }
+                        },
+                        "SinksConfig": {
+                          "Sink": [
+                              {
+                                  "name": "applicationInsights",
+                                  "ApplicationInsights": "48c962fa-a0ee-4a9d-a464-5bc6651e50ce"
+                              }
+                          ]
+                      }
                       },
                       "StorageAccount": "[variables('applicationDiagnosticsStorageAccountName')]"
                     },
