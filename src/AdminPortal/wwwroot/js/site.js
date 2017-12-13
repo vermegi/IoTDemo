@@ -32,7 +32,8 @@ app.controller('DeviceEmulatorController', ['$rootScope', '$scope', '$http', '$t
     var getActorList = function () {
         $http.get('api/Actors')
             .then(function (data, status) {
-                $scope.actors = data.data;
+                $scope.actors = data.data.actorCount;
+                $scope.partitions = data.data.partitionCount;
             });
     };
 }]);

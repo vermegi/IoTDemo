@@ -3,6 +3,7 @@ using Microsoft.ServiceFabric.Actors.Client;
 using Microsoft.ServiceFabric.Actors.Query;
 using System;
 using System.Collections.Generic;
+using System.Fabric;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,8 +20,15 @@ namespace AdminPortal.Controllers
         public async Task<IActionResult> Get()
         {
             var activeActors = new List<ActorInformation>();
+            int partitioncount = 0;
 
-            for (var i = 0; i < 2; i++) //TODO: change upper limit based on query to service fabric manager
+            using (var client = new FabricClient())
+            {
+                var partitions = await client.QueryManager.GetPartitionListAsync(new Uri("fabric:/IotDemoApp/IoTDeviceActorService"));
+                partitioncount = partitions.Count;
+            }
+
+            for (var i = 0; i <= partitioncount; i++) 
             {
                 var actorServiceProxy = ActorServiceProxy.Create(new Uri("fabric:/IotDemoApp/IoTDeviceActorService"), i);
 
@@ -30,13 +38,13 @@ namespace AdminPortal.Controllers
                 do
                 {
                     var page = await actorServiceProxy.GetActorsAsync(continuationToken, cancellationToken);
-                    activeActors.AddRange(page.Items);
+                    activeActors.AddRange(page.Items.ToList());
                     continuationToken = page.ContinuationToken;
                 }
                 while (continuationToken != null);
             }
 
-            return Json(activeActors.Count);
+            return Json(new { PartitionCount = partitioncount, ActorCount = activeActors.Count});
         }
 
     }
