@@ -141,7 +141,8 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2016-09-01",
       "dependsOn": [
-        "[resourceId('Microsoft.OperationalInsights/workspaces/', variables('omsWorkspacename'))]"
+        "[resourceId('Microsoft.OperationalInsights/workspaces/', variables('omsWorkspacename'))]",
+        "[concat('Microsoft.Storage/storageAccounts/', variables('applicationDiagnosticsStorageAccountName'))]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -160,7 +161,8 @@
           "clusterApplication": { "value": "[parameters('clusterApplication')]" },
           "clientApplication": { "value": "[parameters('clientApplication')]" },
           "omsWorkspacename": {"value": "[variables('omsWorkspacename')]"},
-          "omsRegion": {"value": "[variables('omsRegion')]"}
+          "omsRegion": {"value": "[variables('omsRegion')]"},
+          "applicationDiagnosticsStorageAccountName" : {"value": "[variables('applicationDiagnosticsStorageAccountName')]"}
         }
       }
     },

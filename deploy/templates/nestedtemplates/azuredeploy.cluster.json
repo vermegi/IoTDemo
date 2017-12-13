@@ -155,6 +155,9 @@
           "metadata": {
               "description": "Specify the Azure Region for your OMS workspace"
           }
+      },
+      "applicationDiagnosticsStorageAccountName":{
+        "type": "string"
       }
     },
     "variables": {
@@ -176,7 +179,6 @@
       "subnet0Prefix": "10.0.0.0/24",
       "subnet0Ref": "[resourceId('Microsoft.Network/virtualNetworks/subnets/', variables('virtualNetworkName'), variables('subnet0Name'))]",
       "supportLogStorageAccountName": "[concat( uniqueString(resourceGroup().id),'2')]",
-      "applicationDiagnosticsStorageAccountName": "[concat(uniqueString(resourceGroup().id), '3' )]",
       "lbName": "[concat('LB','-', parameters('clusterName'),'-',variables('vmNodeType0Name'))]",
       "lbID0": "[resourceId('Microsoft.Network/loadBalancers',concat('LB','-', parameters('clusterName'),'-',variables('vmNodeType0Name')))]",
       "lbIPConfig0": "[concat(variables('lbID0'),'/frontendIPConfigurations/LoadBalancerIPConfig')]",
@@ -195,22 +197,6 @@
         "apiVersion": "2017-06-01",
         "type": "Microsoft.Storage/storageAccounts",
         "name": "[variables('supportLogStorageAccountName')]",
-        "location": "[parameters('location')]",
-        "dependsOn": [],
-        "properties": {},
-        "kind": "Storage",
-        "sku": {
-          "name": "Standard_LRS"
-        },
-        "tags": {
-          "resourceType": "Service Fabric",
-          "clusterName": "[parameters('clusterName')]"
-        }
-      },
-      {
-        "apiVersion": "2017-06-01",
-        "type": "Microsoft.Storage/storageAccounts",
-        "name": "[variables('applicationDiagnosticsStorageAccountName')]",
         "location": "[parameters('location')]",
         "dependsOn": [],
         "properties": {},
@@ -463,7 +449,6 @@
           "[variables('virtualNetworkName')]",        
           "[variables('lbName')]",
           "[variables('supportLogStorageAccountName')]",
-          "[variables('applicationDiagnosticsStorageAccountName')]"
         ],
         "properties": {
           "overprovision": "[variables('overProvision')]",
@@ -503,8 +488,8 @@
                     "type": "IaaSDiagnostics",
                     "autoUpgradeMinorVersion": true,
                     "protectedSettings": {
-                      "storageAccountName": "[variables('applicationDiagnosticsStorageAccountName')]",
-                      "storageAccountKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('applicationDiagnosticsStorageAccountName')),'2015-05-01-preview').key1]",
+                      "storageAccountName": "[parameters('applicationDiagnosticsStorageAccountName')]",
+                      "storageAccountKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('applicationDiagnosticsStorageAccountName')),'2015-05-01-preview').key1]",
                       "storageAccountEndPoint": "https://core.windows.net/"
                     },
                     "publisher": "Microsoft.Azure.Diagnostics",
@@ -560,7 +545,7 @@
                           ]
                       }
                       },
-                      "StorageAccount": "[variables('applicationDiagnosticsStorageAccountName')]"
+                      "StorageAccount": "[parameters('applicationDiagnosticsStorageAccountName')]"
                     },
                     "typeHandlerVersion": "1.5"
                   }
