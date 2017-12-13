@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.16
+VisualStudioVersion = 15.0.27130.2003
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{A07B5EB6-E848-4116-A8D0-A826331D98C6}") = "IotDemoApp", "IotDemoApp\IotDemoApp.sfproj", "{3DF7ADD2-8DBB-4B88-898C-27635C106098}"
 EndProject
@@ -32,9 +32,11 @@ Global
 		{3DF7ADD2-8DBB-4B88-898C-27635C106098}.Release|x64.Build.0 = Release|x64
 		{3DF7ADD2-8DBB-4B88-898C-27635C106098}.Release|x64.Deploy.0 = Release|x64
 		{9D03AFE8-F0ED-4197-8356-B168CC94FF2B}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{9D03AFE8-F0ED-4197-8356-B168CC94FF2B}.Debug|Any CPU.Build.0 = Debug|x64
 		{9D03AFE8-F0ED-4197-8356-B168CC94FF2B}.Debug|x64.ActiveCfg = Debug|x64
 		{9D03AFE8-F0ED-4197-8356-B168CC94FF2B}.Debug|x64.Build.0 = Debug|x64
 		{9D03AFE8-F0ED-4197-8356-B168CC94FF2B}.Release|Any CPU.ActiveCfg = Release|x64
+		{9D03AFE8-F0ED-4197-8356-B168CC94FF2B}.Release|Any CPU.Build.0 = Release|x64
 		{9D03AFE8-F0ED-4197-8356-B168CC94FF2B}.Release|x64.ActiveCfg = Release|x64
 		{9D03AFE8-F0ED-4197-8356-B168CC94FF2B}.Release|x64.Build.0 = Release|x64
 		{42B949AE-856B-4751-AF36-97F0C7C420E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
