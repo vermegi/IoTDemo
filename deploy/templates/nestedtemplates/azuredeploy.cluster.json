@@ -171,7 +171,7 @@
       "nt0ephemeralEndPort": "65534",
       "nt0fabricTcpGatewayPort": "19000",
       "nt0fabricHttpGatewayPort": "19080",
-      "adminPortalHttpGatewayPort": "6831",
+      "adminPortalHttpGatewayPort": "8631",
       "subnet0Name": "Subnet-0",
       "subnet0Prefix": "10.0.0.0/24",
       "subnet0Ref": "[resourceId('Microsoft.Network/virtualNetworks/subnets/', variables('virtualNetworkName'), variables('subnet0Name'))]",

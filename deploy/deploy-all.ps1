@@ -170,7 +170,8 @@ New-AzureRmResourceGroupDeployment -Verbose -Force -ErrorAction Stop `
    -Name "iotdemodeploy" `
    -ResourceGroupName $RGName `
    -TemplateFile "$scriptDir/templates/azuredeploy.json" `
-   -TemplateParameterFile $paramsFilePath 
+   -TemplateParameterFile $paramsFilePath #`
+   #-Debug
 
 
  Remove-Item -Path $paramsFilePath
