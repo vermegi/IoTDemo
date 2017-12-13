@@ -310,7 +310,7 @@
               }
             },
             {
-              "name": "ddminPortal",
+              "name": "adminPortal",
               "properties": {
                 "backendAddressPool": {
                   "id": "[variables('lbPoolID0')]"
@@ -402,7 +402,7 @@
                 "intervalInSeconds": 5,
                 "numberOfProbes": 2,
                 "port": "[variables('adminPortalHttpGatewayPort')]",
-                "protocol": "Tcp"
+                "protocol": "Http"
               }
             },
            {
