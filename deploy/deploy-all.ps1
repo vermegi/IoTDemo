@@ -24,6 +24,12 @@ Param(
   [Parameter(Mandatory=$True)]
   [string]$ClusterName,
 
+  [Parameter(Mandatory = $True)]
+  [string]$ClusterCertificateSecretName,
+
+  [Parameter(Mandatory = $True)]
+  [string]$ClusterCertificateThumbprint,
+
   [Parameter(Mandatory=$True)]
   [string]$ServiceBusNamespaceName,
 
@@ -87,9 +93,11 @@ Write-Output "Root template SAS - $rootTemplateUri"
 $azureRmContext = Get-AzureRmContext
 $subscriptionId = $azureRmContext.Subscription.SubscriptionId
 $keyVaultId = "/subscriptions/$subscriptionId/resourceGroups/$KeyVaultRGName/providers/Microsoft.KeyVault/vaults/$KeyVaultName"
-$clustercertificate = Get-AzureKeyVaultSecret -VaultName $KeyVaultName -Name 'clustercertificate'
-$clusterurl = $clustercertificate.Id
-Write-Output "clusterurl: " $clusterurl
+
+$clusterCertificateSecret = Get-AzureKeyVaultSecret -VaultName $KeyVaultName -Name $ClusterCertificateSecretName
+$clusterCertificateUrl = $clusterCertificateSecret.Id
+Write-Output "clusterCertificateUrl: " $clusterCertificateUrl
+
 $paramsFile = @{
     '$schema' = "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#"
     contentVersion = "1.0.0.0"
@@ -117,13 +125,13 @@ $paramsFile = @{
          }
        }
         'certificateThumbprint' =  @{
-          value = "D07E8C71FBD5F793B010D78B4A959FE7D8EC9214"
+          value = "$ClusterCertificateThumbprint"
         }
         'sourceVaultResourceId' =  @{
           value = "$keyVaultId"
         }
         'certificateUrlValue' = @{
-          value = "$clusterurl"
+          value = "$clusterCertificateUrl"
         }    
         'serviceBusNamespaceName' = @{
           value = $ServiceBusNamespaceName
