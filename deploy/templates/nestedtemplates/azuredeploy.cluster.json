@@ -402,7 +402,8 @@
                 "intervalInSeconds": 5,
                 "numberOfProbes": 2,
                 "port": "[variables('adminPortalHttpGatewayPort')]",
-                "protocol": "Http"
+                "protocol": "Http",
+                "requestPath": "/"
               }
             },
            {
