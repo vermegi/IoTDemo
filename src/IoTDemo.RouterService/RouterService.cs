@@ -49,7 +49,7 @@ namespace IoTDemo.RouterService
         /// <param name="cancellationToken">Canceled when Service Fabric needs to shut down this service replica.</param>
         protected override async Task RunAsync(CancellationToken cancellationToken)
         {
-            string iotHubConnectionstring = "HostName=iotdemogittehub.azure-devices.net;SharedAccessKeyName=service;SharedAccessKey=dUgqwEJE1K2YcQozHO5N+LnamsBH3dzkFzaoL0CGx9g=";
+            string iotHubConnectionstring = "HostName=iotdemogittehub.azure-devices.net;SharedAccessKeyName=service;SharedAccessKey=IGHntc2VC4+pthyOyyRf9jy6kTU11n+WgVMJ9N7VWUw=";
 
             // These Reliable Dictionaries are used to keep track of our position in IoT Hub.
             // If this service fails over, this will allow it to pick up where it left off in the event stream.
@@ -107,7 +107,6 @@ namespace IoTDemo.RouterService
                                 Context,
                                 "Sent event data to actor service '{0}'.",
                                 deviceId);
-
 
                             if (++offsetIteration % OffsetInterval == 0)
                             {

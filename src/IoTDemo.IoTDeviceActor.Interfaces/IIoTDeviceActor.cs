@@ -15,5 +15,7 @@ namespace IoTDemo.IoTDeviceActor.Interfaces
     {
         Task SendDeviceMessage(string message, CancellationToken cancellationToken);
         Task<string> GetLastDeviceMessage(CancellationToken cancellationToken);
+
+        Task<int> GetNumberOfMessages(CancellationToken cancellation);
     }
 }

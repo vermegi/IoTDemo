@@ -34,6 +34,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\IotDemo.DeviceEmulator\IotDemo.DeviceEmulator.csproj" />
+    <ProjectReference Include="..\IoTDemo.IoTDeviceActor.Interfaces\IoTDemo.IoTDeviceActor.Interfaces.csproj" />
   </ItemGroup>
 
 </Project>

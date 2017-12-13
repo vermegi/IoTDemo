@@ -27,8 +27,16 @@
             </div>
         </div>
 
-        actors: <span ng-bind="actors"></span><br/>
-        partitions: <span ng-bind="partitions"></span><br />
+        # partitions: <span ng-bind="numberOfPartitions"></span><br />
+        # actors: <span ng-bind="numberOfActors"></span><br/>
+
+        <table border="1">
+            <tr ng-repeat="actor in actors">
+                <td>{{actor.actor.ActorId.StringId}}</td>
+                <td>{{actor.actor.IsActive}}</td>
+                <td>{{actor.partition}}</td>
+            </tr>
+        </table>
     </div>
 </div>
 

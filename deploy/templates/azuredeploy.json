@@ -194,7 +194,8 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "iotHubName": { "value": "[parameters('iotHubName')]" }
+          "iotHubName": { "value": "[parameters('iotHubName')]" },
+          "skuName": {"value": "S1"}
         }
       }
     }

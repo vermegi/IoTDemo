@@ -6,5 +6,6 @@
     <Parameter Name="IoTDemo.RouterService_TargetReplicaSetSize" Value="3" />
     <Parameter Name="AdminPortal_InstanceCount" Value="-1" />
     <Parameter Name="IotDemo.DeviceEmulator_InstanceCount" Value="1" />
+    <Parameter Name="IoTDeviceActorService_PartitionCount" Value="10" />
   </Parameters>
 </Application>

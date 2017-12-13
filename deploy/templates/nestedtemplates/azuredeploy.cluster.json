@@ -521,6 +521,27 @@
                                 "DefaultEvents": {
                                 "eventDestination": "RouterServiceEventTable"
                                 }
+                              },
+                              {
+                                "provider": "MyCompany-IotDemoApp-IoTDemo.IoTDeviceActor",
+                                "scheduledTransferPeriod": "PT5M",
+                                "DefaultEvents": {
+                                "eventDestination": "ActorServiceEventTable"
+                                }
+                              },
+                              {
+                                "provider": "MyCompany-IotDemoApp-IotDemo.DeviceEmulator",
+                                "scheduledTransferPeriod": "PT5M",
+                                "DefaultEvents": {
+                                "eventDestination": "DeviceEmulatorServiceEventTable"
+                                }
+                              },
+                              {
+                                "provider": "MyCompany-IotDemoApp-AdminPortal",
+                                "scheduledTransferPeriod": "PT5M",
+                                "DefaultEvents": {
+                                "eventDestination": "AdminPortalServiceEventTable"
+                                }
                               }
                             ],
                             "EtwManifestProviderConfiguration": [

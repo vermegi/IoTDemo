@@ -29,7 +29,7 @@ namespace IotDemo.DeviceEmulator
     /// </summary>
     internal sealed class DeviceEmulator : StatelessService, IDeviceEmulatorService
     {
-        private string _connectionstring = "HostName=iotdemogittehub.azure-devices.net;SharedAccessKeyName=registryReadWrite;SharedAccessKey=uajb2qStqre9hgwPJ1dBY91rNn1h5Wo+dl305nHkVSs=";
+        private string _connectionstring = "HostName=iotdemogittehub.azure-devices.net;SharedAccessKeyName=registryReadWrite;SharedAccessKey=jKocg4cVmoxUmvxLP4iltIz9KEZVnKFI5qAwne2KlTw=";
         private RegistryManager _registryManager;
         private bool _creatingDevices = false;
         private bool _sendingData = false;

@@ -33,12 +33,20 @@ namespace IoTDemo.IoTDeviceActor
 
         public Task<string> GetLastDeviceMessage(CancellationToken cancellationToken)
         {
-            return this.StateManager.GetStateAsync<string>("lastState", cancellationToken);
+            return StateManager.GetStateAsync<string>("lastState", cancellationToken);
         }
 
-        public Task SendDeviceMessage(string message, CancellationToken cancellationToken)
+        public Task<int> GetNumberOfMessages(CancellationToken cancellationToken)
         {
-            return StateManager.AddOrUpdateStateAsync("lastState", message, (key, value) => message, cancellationToken);
+            return StateManager.GetStateAsync<int>("numberOfMessages", cancellationToken);
+        }
+
+        public async Task SendDeviceMessage(string message, CancellationToken cancellationToken)
+        {
+            var numberOfMessages = await StateManager.GetStateAsync<int>("numberOfMessages", cancellationToken);
+            numberOfMessages++;
+            await StateManager.AddOrUpdateStateAsync("numberOfMessages", numberOfMessages, (key, value) => numberOfMessages, cancellationToken);
+            await StateManager.AddOrUpdateStateAsync("lastState", message, (key, value) => message, cancellationToken);
         }
 
         /// <summary>
@@ -48,6 +56,7 @@ namespace IoTDemo.IoTDeviceActor
         protected override Task OnActivateAsync()
         {
             ActorEventSource.Current.ActorMessage(this, "Actor activated.");
+            StateManager.TryAddStateAsync("numberOfMessages", 0);
             return this.StateManager.TryAddStateAsync("lastState", string.Empty);
         }
     }
