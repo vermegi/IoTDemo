@@ -82,15 +82,67 @@
     "deployclusterTemplateFolder": "nestedtemplates",
     "deployclusterTemplateFileName": "azuredeploy.cluster.json",
     "deploysbTemplateFileName": "azuredeploy.servicebus.json",
-    "deployiothubTemplateFileName": "azuredeploy.iothub.json"
-
+    "deployiothubTemplateFileName": "azuredeploy.iothub.json",
+    "omsWorkspacename": "[concat(parameters('clustername'), 'oms')]",
+    "omsRegion" : "[parameters('location')]",
+    "applicationDiagnosticsStorageAccountType": "Standard_LRS",
+    "applicationDiagnosticsStorageAccountName": "[toLower(concat('oms', uniqueString(resourceGroup().id), '3' ))]"
   },
   "resources": [
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[variables('applicationDiagnosticsStorageAccountName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "accountType": "[variables('applicationDiagnosticsStorageAccountType')]"
+      },
+      "tags": {
+        "resourceType": "Service Fabric",
+        "clusterName": "[parameters('clusterName')]"
+      }
+    },
+    {
+      "apiVersion": "2017-04-26-preview",
+      "location": "[variables('omsRegion')]",
+      "name": "[variables('omsWorkspacename')]",
+      "type": "Microsoft.OperationalInsights/workspaces",
+      "properties": {
+          "sku": {
+              "name": "Free"
+          }
+      },
+      "resources": [
+          {
+              "apiVersion": "2017-04-26-preview",
+              "name": "[concat(variables('applicationDiagnosticsStorageAccountName'),variables('omsWorkspacename'))]",
+              "type": "storageinsightconfigs",
+              "dependsOn": [
+                  "[resourceId('Microsoft.OperationalInsights/workspaces/', variables('omsWorkspacename'))]",
+                  "[concat('Microsoft.Storage/storageAccounts/', variables('applicationDiagnosticsStorageAccountName'))]"
+              ],
+              "properties": {
+                  "containers": [ ],
+                  "tables": [
+                      "WADServiceFabric*EventTable",
+                      "WADWindowsEventLogsTable",
+                      "WADETWEventTable"
+                  ],
+                  "storageAccount": {
+                      "id": "[resourceId('Microsoft.Storage/storageaccounts/', variables('applicationDiagnosticsStorageAccountName'))]",
+                      "key": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('applicationDiagnosticsStorageAccountName')),'2015-06-15').key1]"
+                  }
+              }
+          }
+      ]
+    },
     {
       "name": "deploycluster",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2016-09-01",
-      "dependsOn": [],
+      "dependsOn": [
+        "[resourceId('Microsoft.OperationalInsights/workspaces/', variables('omsWorkspacename'))]"
+      ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -106,7 +158,9 @@
           "certificateUrlValue": { "value": "[parameters('certificateUrlValue')]" },
           "tenantId": { "value": "[parameters('tenantId')]" },
           "clusterApplication": { "value": "[parameters('clusterApplication')]" },
-          "clientApplication": { "value": "[parameters('clientApplication')]" }
+          "clientApplication": { "value": "[parameters('clientApplication')]" },
+          "omsWorkspacename": {"value": "[variables('omsWorkspacename')]"},
+          "omsRegion": {"value": "[variables('omsRegion')]"}
         }
       }
     },

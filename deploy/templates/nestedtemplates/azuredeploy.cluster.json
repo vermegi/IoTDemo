@@ -141,6 +141,20 @@
       },
       "clientApplication":{
         "type": "string"
+      },
+      "omsWorkspacename": {
+        "type": "string",
+        "defaultValue": "sfomsworkspace",
+        "metadata": {
+            "description": "Name of your OMS Log Analytics Workspace"
+        }
+      },
+      "omsRegion": {
+          "type": "string",
+          "defaultValue": "West Europe",
+          "metadata": {
+              "description": "Specify the Azure Region for your OMS workspace"
+          }
       }
     },
     "variables": {
@@ -172,7 +186,9 @@
       "adminPortalProbeID0": "[concat(variables('lbID0'),'/probes/adminPortalGatewayProbe')]",
       "lbNatPoolID0": "[concat(variables('lbID0'),'/inboundNatPools/LoadBalancerBEAddressNatPool')]",
       "vmNodeType0Name": "[toLower(concat('NT1', variables('vmName')))]",
-      "vmNodeType0Size": "[parameters('nodeTypeSize')]"
+      "vmNodeType0Size": "[parameters('nodeTypeSize')]",
+      "solution": "[Concat('ServiceFabric', '(', parameters('omsWorkspacename'), ')')]",
+      "solutionName": "ServiceFabric"
     },
     "resources": [
       {
@@ -691,6 +707,24 @@
         "tags": {
           "resourceType": "Service Fabric",
           "clusterName": "[parameters('clusterName')]"
+        }
+      },
+      {
+        "apiVersion": "2015-11-01-preview",
+        "location": "[parameters('omsRegion')]",
+        "name": "[variables('solution')]",
+        "type": "Microsoft.OperationsManagement/solutions",
+        "id": "[resourceId('Microsoft.OperationsManagement/solutions/', variables('solution'))]",
+        "dependsOn": [
+        ],
+        "properties": {
+            "workspaceResourceId": "[resourceId('Microsoft.OperationalInsights/workspaces/', parameters('omsWorkspacename'))]"
+        },
+        "plan": {
+            "name": "[variables('solution')]",
+            "publisher": "Microsoft",
+            "product": "[Concat('OMSGallery/', variables('solutionName'))]",
+            "promotionCode": ""
         }
       }
     ],
