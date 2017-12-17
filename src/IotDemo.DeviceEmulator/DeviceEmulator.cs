@@ -19,7 +19,7 @@ namespace IotDemo.DeviceEmulator
     public interface IDeviceEmulatorService : IService
     {
         Task ToggleCreateDevices();
-        Task  ToggleSendData();
+        Task  ToggleSendData(int temperature);
 
         Task<DeviceEmulatorData> GetStatus();
     }
@@ -33,6 +33,7 @@ namespace IotDemo.DeviceEmulator
         private RegistryManager _registryManager;
         private bool _creatingDevices = false;
         private bool _sendingData = false;
+        private int _temperature = 50;
 
         public DeviceEmulator(StatelessServiceContext context)
             : base(context)
@@ -146,7 +147,7 @@ namespace IotDemo.DeviceEmulator
 
                 message = new Microsoft.Azure.Devices.Client.Message(stream.GetBuffer());
                 message.Properties.Add("DeviceID", deviceId);
-                message.Properties.Add("Temparature", "60");
+                message.Properties.Add("Temparature", _temperature == 0 ? "50" : _temperature.ToString());
                 message.Properties.Add("FanSpeed", "256");
                 message.Properties.Add("IsOnline", "true");
                 //message.Properties.Add("GatewayId", "1234"); --> SiteId (RegistrationMessage)
@@ -191,8 +192,9 @@ namespace IotDemo.DeviceEmulator
             return Task.FromResult<object>(null);
         }
 
-        public Task ToggleSendData()
+        public Task ToggleSendData(int temperature)
         {
+            _temperature = temperature;
             _sendingData = !_sendingData;
             ServiceEventSource.Current.ServiceMessage(Context, "ToggleSendData: {0}", _sendingData);
             return Task.FromResult<object>(null);

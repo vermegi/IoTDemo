@@ -23,7 +23,7 @@ namespace AdminPortal.Controllers
         {
             var deviceEmulatorClient = ServiceProxy.Create<IDeviceEmulatorService>(new System.Uri("fabric:/IotDemoApp/IotDemo.DeviceEmulator"));
 
-            var status = deviceEmulatorClient.GetStatus();
+            var status = await deviceEmulatorClient.GetStatus();
 
             return Json(status);
         }
@@ -32,16 +32,16 @@ namespace AdminPortal.Controllers
         public async Task<IActionResult> ToggleCreateDevices()
         {
             var deviceEmulatorClient = ServiceProxy.Create<IDeviceEmulatorService>(new System.Uri("fabric:/IotDemoApp/IotDemo.DeviceEmulator"));
-            deviceEmulatorClient.ToggleCreateDevices();
+            await deviceEmulatorClient.ToggleCreateDevices();
 
             return Ok();
         }
 
         [HttpPut("togglesend")]
-        public async Task<IActionResult> ToggleSendDataFromDevices()
+        public async Task<IActionResult> ToggleSendDataFromDevices(int temperature)
         {
             var deviceEmulatorClient = ServiceProxy.Create<IDeviceEmulatorService>(new System.Uri("fabric:/IotDemoApp/IotDemo.DeviceEmulator"));
-            deviceEmulatorClient.ToggleSendData();
+            await deviceEmulatorClient.ToggleSendData(temperature);
 
             return Ok();
         }

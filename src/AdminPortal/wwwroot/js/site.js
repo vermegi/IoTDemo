@@ -7,6 +7,7 @@ app.run(function () { });
 app.controller('DeviceEmulatorController', ['$rootScope', '$scope', '$http', '$timeout', function ($rootScope, $scope, $http, $timeout) {
 
     $scope.refresh = function () {
+        $scope.temptoSend = 40;
         $http.get('api/Devices')
             .then(function (data, status) {
                 $scope.creatingDevices = data.data.creatingDevices;
@@ -23,7 +24,7 @@ app.controller('DeviceEmulatorController', ['$rootScope', '$scope', '$http', '$t
     };
 
     $scope.toggleSendDataFromDevices = function () {
-        $http.put('api/Devices/togglesend')
+        $http.put('api/Devices/togglesend?temperature=' + $scope.temptoSend)
             .then(function () {
                 $scope.refresh();
             });
