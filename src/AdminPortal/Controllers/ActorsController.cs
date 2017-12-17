@@ -24,46 +24,79 @@ namespace AdminPortal.Controllers
             var activeActors = new List<ActorData>();
             int partitioncount = 0;
 
-            ServicePartitionList partitions;
-            var cancellationToken = new CancellationToken();
-
-            using (var client = new FabricClient())
+            using (var fabricClient = new FabricClient())
             {
-                partitions = await client.QueryManager.GetPartitionListAsync(new Uri("fabric:/IotDemoApp/IoTDeviceActorService"));
-                partitioncount = partitions.Count;
-            }
+                var partitionList = await fabricClient.QueryManager.GetPartitionListAsync(new Uri("fabric:/IotDemoApp/IoTDeviceActorService"));
+                partitioncount = partitionList.Count;
+                var actorIds = new List<ulong>();
 
-            for (var i = 0; i < partitioncount; i++) 
-            {
-                var actorServiceProxy = ActorServiceProxy.Create(new Uri("fabric:/IotDemoApp/IoTDeviceActorService"), i);
-
-                ContinuationToken continuationToken = null;
-
-                do
+                foreach(var partition in partitionList)
                 {
-                    var page = await actorServiceProxy.GetActorsAsync(continuationToken, cancellationToken);
-                    activeActors.AddRange(page.Items.Select(a => new ActorData { Actor = a, Partition = i}));
-                    continuationToken = page.ContinuationToken;
+                    var key = partition.PartitionInformation as Int64RangePartitionInformation;
+                    var actorServiceProxy = ActorServiceProxy.Create(new Uri("fabric:/IotDemoApp/IoTDeviceActorService"), key.LowKey);
+
+                    ContinuationToken continuationToken = null;
+                    var cancellationToken = new CancellationTokenSource();
+
+                    do
+                    {
+                        var page = await actorServiceProxy.GetActorsAsync(continuationToken, cancellationToken.Token);
+                        activeActors.AddRange(page.Items.Select(a => new ActorData { Actor = a, Partition = key.LowKey }));
+                        continuationToken = page.ContinuationToken;
+                    } while (continuationToken != null);
                 }
-                while (continuationToken != null);
             }
 
-            //foreach(var actor in activeActors)
-            //{
-            //    var theActor = ActorProxy.Create<IIoTDeviceActor>(actor.Actor.ActorId, new Uri("fabric:/IotDemoApp/IoTDeviceActorService"));
-            //    actor.LastMessage = await theActor.GetLastDeviceMessage(cancellationToken);
-            //    actor.NumberOfMessages = await theActor.GetNumberOfMessages(cancellationToken);
-            //}
-
-            return Json(new { PartitionCount = partitioncount, ActorCount = activeActors.Count(), Actors = activeActors.OrderBy(a => a.Actor.ActorId)});
+            return Json(new { PartitionCount = partitioncount, ActorCount = activeActors.Count(), Actors = activeActors.OrderBy(a => a.Actor.ActorId) });
         }
+
+
+        //[HttpGet]
+        //public async Task<IActionResult> Get()
+        //{
+        //    var activeActors = new List<ActorData>();
+        //    int partitioncount = 0;
+
+        //    ServicePartitionList partitions;
+        //    var cancellationToken = new CancellationToken();
+
+        //    using (var client = new FabricClient())
+        //    {
+        //        partitions = await client.QueryManager.GetPartitionListAsync(new Uri("fabric:/IotDemoApp/IoTDeviceActorService"));
+        //        partitioncount = partitions.Count;
+        //    }
+
+        //    for (var i = 0; i < partitioncount; i++) 
+        //    {
+        //        var actorServiceProxy = ActorServiceProxy.Create(new Uri("fabric:/IotDemoApp/IoTDeviceActorService"), i);
+
+        //        ContinuationToken continuationToken = null;
+
+        //        do
+        //        {
+        //            var page = await actorServiceProxy.GetActorsAsync(continuationToken, cancellationToken);
+        //            activeActors.AddRange(page.Items.Select(a => new ActorData { Actor = a, Partition = i}));
+        //            continuationToken = page.ContinuationToken;
+        //        }
+        //        while (continuationToken != null);
+        //    }
+
+        //    //foreach(var actor in activeActors)
+        //    //{
+        //    //    var theActor = ActorProxy.Create<IIoTDeviceActor>(actor.Actor.ActorId, new Uri("fabric:/IotDemoApp/IoTDeviceActorService"));
+        //    //    actor.LastMessage = await theActor.GetLastDeviceMessage(cancellationToken);
+        //    //    actor.NumberOfMessages = await theActor.GetNumberOfMessages(cancellationToken);
+        //    //}
+
+        //    return Json(new { PartitionCount = partitioncount, ActorCount = activeActors.Count(), Actors = activeActors.OrderBy(a => a.Actor.ActorId)});
+        //}
 
     }
 
     public class ActorData
     {
         public ActorInformation Actor { get; set; }
-        public int Partition { get; set; }
+        public long Partition { get; set; }
 
         public string LastMessage { get; set; }
 
