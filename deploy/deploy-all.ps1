@@ -43,7 +43,10 @@ Param(
   [string]$ClusterApplication,
 
   [Parameter(Mandatory=$True)]
-  [string]$ClientApplication
+  [string]$ClientApplication,
+
+  [Parameter(Mandatory=$True)]
+  [string]$CosmosDbName
   )
 
 Select-AzureRmSubscription -SubscriptionName $SubscriptionName
@@ -157,6 +160,10 @@ $paramsFile = @{
 
         'clientApplication' = @{
           value = $ClientApplication
+        }
+
+        'cosmosdatabaseAccountName' = @{
+          value = $CosmosDbName
         }
     }       
 }
