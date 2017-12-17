@@ -92,7 +92,7 @@ namespace IoTDemo.IoTDeviceActor
                             namespaceClient.CreateQueue(queueName);
 
                         var messagingFactory = MessagingFactory.Create(ServiceBusEnvironment.CreateServiceUri("sb", serviceNamespace, string.Empty), credentials);
-                        var myQueueClient = messagingFactory.CreateQueueClient(queueName);
+                        _queueClient = messagingFactory.CreateQueueClient(queueName);
                     }
                     catch (MessagingEntityAlreadyExistsException) { }
                 }
