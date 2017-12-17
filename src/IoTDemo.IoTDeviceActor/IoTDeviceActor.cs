@@ -7,6 +7,8 @@ using Microsoft.ServiceFabric.Actors;
 using Microsoft.ServiceFabric.Actors.Runtime;
 using Microsoft.ServiceFabric.Actors.Client;
 using IoTDemo.IoTDeviceActor.Interfaces;
+using Microsoft.ServiceBus.Messaging;
+using Microsoft.ServiceBus;
 
 namespace IoTDemo.IoTDeviceActor
 {
@@ -21,6 +23,8 @@ namespace IoTDemo.IoTDeviceActor
     [StatePersistence(StatePersistence.Persisted)]
     internal class IoTDeviceActor : Actor, IIoTDeviceActor
     {
+        private QueueClient _queueClient;
+
         /// <summary>
         /// Initializes a new instance of IoTDeviceActor
         /// </summary>
@@ -43,10 +47,50 @@ namespace IoTDemo.IoTDeviceActor
 
         public async Task SendDeviceMessage(string message, CancellationToken cancellationToken)
         {
+            await IncrementNumberOfMessages(cancellationToken);
+
+            var lastState = await StateManager.GetStateAsync<string>("lastState", cancellationToken);
+            if (message != lastState)
+            {
+                await SendStateChangeMessage(message, lastState);
+            }
+
+            await StateManager.AddOrUpdateStateAsync("lastState", message, (key, value) => message, cancellationToken);
+        }
+
+        private async Task SendStateChangeMessage(string message, string lastState)
+        {
+            var brokeredMessage = new BrokeredMessage(new DeviceStateChangedEvent(lastState, message));
+            await Queueclient.SendAsync(brokeredMessage);
+        }
+
+        private async Task IncrementNumberOfMessages(CancellationToken cancellationToken)
+        {
             var numberOfMessages = await StateManager.GetOrAddStateAsync("numberOfMessages", 0, cancellationToken);
             numberOfMessages++;
             await StateManager.AddOrUpdateStateAsync("numberOfMessages", numberOfMessages, (key, value) => numberOfMessages, cancellationToken);
-            await StateManager.AddOrUpdateStateAsync("lastState", message, (key, value) => message, cancellationToken);
+        }
+
+        private QueueClient Queueclient
+        {
+            get
+            {
+                if (_queueClient == null)
+                {
+                    var sasKeyName = "RootManageSharedAccessKey";
+                    var sasKeyValue = "NvY+XbLTscBcCIH/Za9tK1kz76kSlYNlYXnb54glkjM=";
+                    var serviceNamespace = "iotdemogittesbns";
+                    var queueName = "DeviceChangeEvents";
+                    // Create management credentials
+                    var credentials = TokenProvider.CreateSharedAccessSignatureTokenProvider(sasKeyName, sasKeyValue);
+                    // Create namespace client
+                    var namespaceClient = new NamespaceManager(ServiceBusEnvironment.CreateServiceUri("sb", serviceNamespace, string.Empty), credentials);
+                    var myQueue = namespaceClient.CreateQueue(queueName);
+                    var messagingFactory = MessagingFactory.Create(ServiceBusEnvironment.CreateServiceUri("sb", serviceNamespace, string.Empty), credentials);
+                    var myQueueClient = messagingFactory.CreateQueueClient(queueName);
+                }
+                return _queueClient;
+            }
         }
 
         /// <summary>
