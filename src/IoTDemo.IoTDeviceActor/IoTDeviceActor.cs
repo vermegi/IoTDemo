@@ -81,13 +81,20 @@ namespace IoTDemo.IoTDeviceActor
                     var sasKeyValue = "NvY+XbLTscBcCIH/Za9tK1kz76kSlYNlYXnb54glkjM=";
                     var serviceNamespace = "iotdemogittesbns";
                     var queueName = "DeviceChangeEvents";
-                    // Create management credentials
-                    var credentials = TokenProvider.CreateSharedAccessSignatureTokenProvider(sasKeyName, sasKeyValue);
-                    // Create namespace client
-                    var namespaceClient = new NamespaceManager(ServiceBusEnvironment.CreateServiceUri("sb", serviceNamespace, string.Empty), credentials);
-                    var myQueue = namespaceClient.CreateQueue(queueName);
-                    var messagingFactory = MessagingFactory.Create(ServiceBusEnvironment.CreateServiceUri("sb", serviceNamespace, string.Empty), credentials);
-                    var myQueueClient = messagingFactory.CreateQueueClient(queueName);
+                    try
+                    {
+                        // Create management credentials
+                        var credentials = TokenProvider.CreateSharedAccessSignatureTokenProvider(sasKeyName, sasKeyValue);
+                        // Create namespace client
+                        var namespaceClient = new NamespaceManager(ServiceBusEnvironment.CreateServiceUri("sb", serviceNamespace, string.Empty), credentials);
+
+                        if (!namespaceClient.QueueExists(queueName))
+                            namespaceClient.CreateQueue(queueName);
+
+                        var messagingFactory = MessagingFactory.Create(ServiceBusEnvironment.CreateServiceUri("sb", serviceNamespace, string.Empty), credentials);
+                        var myQueueClient = messagingFactory.CreateQueueClient(queueName);
+                    }
+                    catch (MessagingEntityAlreadyExistsException) { }
                 }
                 return _queueClient;
             }

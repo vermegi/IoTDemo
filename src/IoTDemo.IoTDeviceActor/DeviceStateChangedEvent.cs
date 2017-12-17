@@ -1,17 +1,24 @@
-﻿namespace IoTDemo.IoTDeviceActor
-{
-    internal class DeviceStateChangedEvent
-    {
+﻿using System.Runtime.Serialization;
 
+namespace IoTDemo.IoTDeviceActor
+{
+    [DataContract]
+    public class DeviceStateChangedEvent
+    {
         public DeviceStateChangedEvent(string deviceId, string lastState, string message)
         {
             DeviceId = deviceId;
             LastState = lastState;
             Message = message;
         }
-        public string DeviceId { get; private set; }
 
-        public string LastState { get; private set; }
-        public string Message { get; private set; }
+        [DataMember]
+        public string DeviceId { get; set; }
+
+        [DataMember]
+        public string LastState { get; set; }
+
+        [DataMember]
+        public string Message { get; set; }
     }
 }
