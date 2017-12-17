@@ -60,7 +60,7 @@ namespace IoTDemo.IoTDeviceActor
 
         private async Task SendStateChangeMessage(string message, string lastState)
         {
-            var brokeredMessage = new BrokeredMessage(new DeviceStateChangedEvent(lastState, message));
+            var brokeredMessage = new BrokeredMessage(new DeviceStateChangedEvent(this.GetActorId().GetStringId(), lastState, message));
             await Queueclient.SendAsync(brokeredMessage);
         }
 
