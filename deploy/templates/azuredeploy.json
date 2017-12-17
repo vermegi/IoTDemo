@@ -76,6 +76,12 @@
     },
     "clientApplication":{
       "type": "string"
+    },
+    "cosmosdatabaseAccountName": {
+      "type": "string",
+      "metadata": {
+        "description": "The MongoDB database account name. Needs to be globally unique."
+      }
     }
   },
   "variables": {
@@ -83,6 +89,7 @@
     "deployclusterTemplateFileName": "azuredeploy.cluster.json",
     "deploysbTemplateFileName": "azuredeploy.servicebus.json",
     "deployiothubTemplateFileName": "azuredeploy.iothub.json",
+    "deploycosmosTemplateFileName": "azuredeploy.cosmos.json",
     "omsWorkspacename": "[concat(parameters('clustername'), 'oms')]",
     "omsRegion" : "[parameters('location')]",
     "applicationDiagnosticsStorageAccountType": "Standard_LRS",
@@ -196,6 +203,22 @@
         "parameters": {
           "iotHubName": { "value": "[parameters('iotHubName')]" },
           "skuName": {"value": "S1"}
+        }
+      }
+    },
+    {
+      "name": "deploycosmos",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2016-09-01",
+      "dependsOn": [],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('_artifactsLocation'), '/', variables('deployclusterTemplateFolder'), '/', variables('deploycosmosTemplateFileName'), parameters('_artifactsSAS'))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "databaseAccountName": { "value": "[parameters('cosmosdatabaseAccountName')]" }
         }
       }
     }
