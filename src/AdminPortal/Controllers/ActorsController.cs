@@ -23,6 +23,7 @@ namespace AdminPortal.Controllers
         {
             var activeActors = new List<ActorData>();
             int partitioncount = 0;
+            var cancellationToken = new CancellationTokenSource();
 
             using (var fabricClient = new FabricClient())
             {
@@ -36,7 +37,6 @@ namespace AdminPortal.Controllers
                     var actorServiceProxy = ActorServiceProxy.Create(new Uri("fabric:/IotDemoApp/IoTDeviceActorService"), key.LowKey);
 
                     ContinuationToken continuationToken = null;
-                    var cancellationToken = new CancellationTokenSource();
 
                     do
                     {
@@ -45,6 +45,13 @@ namespace AdminPortal.Controllers
                         continuationToken = page.ContinuationToken;
                     } while (continuationToken != null);
                 }
+            }
+
+            foreach (var actor in activeActors)
+            {
+                var theActor = ActorProxy.Create<IIoTDeviceActor>(actor.Actor.ActorId, new Uri("fabric:/IotDemoApp/IoTDeviceActorService"));
+                actor.LastMessage = await theActor.GetLastDeviceMessage(cancellationToken.Token);
+                actor.NumberOfMessages = await theActor.GetNumberOfMessages(cancellationToken.Token);
             }
 
             return Json(new { PartitionCount = partitioncount, ActorCount = activeActors.Count(), Actors = activeActors.OrderBy(a => a.Actor.ActorId) });

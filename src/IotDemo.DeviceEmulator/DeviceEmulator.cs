@@ -146,7 +146,7 @@ namespace IotDemo.DeviceEmulator
 
                 message = new Microsoft.Azure.Devices.Client.Message(stream.GetBuffer());
                 message.Properties.Add("DeviceID", deviceId);
-                message.Properties.Add("Temparature", "50");
+                message.Properties.Add("Temparature", "60");
                 message.Properties.Add("FanSpeed", "256");
                 message.Properties.Add("IsOnline", "true");
                 //message.Properties.Add("GatewayId", "1234"); --> SiteId (RegistrationMessage)

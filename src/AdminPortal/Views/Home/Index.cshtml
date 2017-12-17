@@ -34,6 +34,8 @@
             <tr ng-repeat="actor in actors">
                 <td>{{actor.actor.ActorId.StringId}}</td>
                 <td>{{actor.actor.IsActive}}</td>
+                <td>{{actor.actor.lastMessage}}</td>
+                <td>{{actor.actor.numberOfMessages}}</td>
                 <td>{{actor.partition}}</td>
             </tr>
         </table>
