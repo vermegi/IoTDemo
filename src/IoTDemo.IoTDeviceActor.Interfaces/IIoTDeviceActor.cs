@@ -14,6 +14,7 @@ namespace IoTDemo.IoTDeviceActor.Interfaces
     public interface IIoTDeviceActor : IActor
     {
         Task SendDeviceMessage(string message, CancellationToken cancellationToken);
+        Task SendDeviceMessageProps(IDictionary<string, object> properties, CancellationToken cancellationToken);
         Task<string> GetLastDeviceMessage(CancellationToken cancellationToken);
 
         Task<int> GetNumberOfMessages(CancellationToken cancellation);

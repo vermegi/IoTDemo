@@ -61,6 +61,22 @@ namespace IoTDemo.IoTDeviceActor
             await AddMessageInDb(new Message { TheMessage = message, DeviceId = this.GetActorId().GetStringId() });
         }
 
+        public async Task SendDeviceMessageProps(IDictionary<string, object> properties, CancellationToken cancellationToken)
+        {
+            await IncrementNumberOfMessages(cancellationToken);
+
+            var lastState = await StateManager.GetStateAsync<string>("lastState", cancellationToken);
+            var temperature = (string)properties["Temparature"];
+            if (temperature != lastState)
+            {
+                await SendStateChangeMessage(temperature, lastState);
+            }
+
+            await StateManager.AddOrUpdateStateAsync("lastState", temperature, (key, value) => temperature, cancellationToken);
+
+            await AddPropertiesInDb(new PropMessage { Properties = properties, DeviceId = this.GetActorId().GetStringId() });
+        }
+
         private static async Task AddMessageInDb(Message message)
         {
             var mongoConnectionString = "mongodb://iotdemogittecosmos:ZzWlJ5ETwSQ17kFIYp5fv0GqDTJHulQ91qvwac3DBXQ1n7Ve3ojq5iAd46BO1dEwmw2sYR5yPMQvfZgtdnVENA==@iotdemogittecosmos.documents.azure.com:10255/?ssl=true&replicaSet=globaldb";
@@ -71,6 +87,18 @@ namespace IoTDemo.IoTDeviceActor
             var db = client.GetDatabase(dbName);
             var messages = db.GetCollection<Message>(collectionName);
             await messages.InsertOneAsync(message);
+        }
+
+        private static async Task AddPropertiesInDb(PropMessage properties)
+        {
+            var mongoConnectionString = "mongodb://iotdemogittecosmos:ZzWlJ5ETwSQ17kFIYp5fv0GqDTJHulQ91qvwac3DBXQ1n7Ve3ojq5iAd46BO1dEwmw2sYR5yPMQvfZgtdnVENA==@iotdemogittecosmos.documents.azure.com:10255/?ssl=true&replicaSet=globaldb";
+            var dbName = "IoTDemo";
+            var collectionName = "properties";
+
+            var client = new MongoClient(mongoConnectionString);
+            var db = client.GetDatabase(dbName);
+            var messages = db.GetCollection<PropMessage>(collectionName);
+            await messages.InsertOneAsync(properties);
         }
 
         private async Task SendStateChangeMessage(string message, string lastState)

@@ -101,7 +101,8 @@ namespace IoTDemo.RouterService
                             string deviceId = (string)eventData.Properties["DeviceID"];
 
                             var deviceactorProxy = ActorProxy.Create<IIoTDeviceActor>(new ActorId(deviceId), new Uri("fabric:/IotDemoApp/IoTDeviceActorService"));
-                            await deviceactorProxy.SendDeviceMessage((string)eventData.Properties["Temparature"], cancellationToken);
+                            //await deviceactorProxy.SendDeviceMessage((string)eventData.Properties["Temparature"], cancellationToken);
+                            await deviceactorProxy.SendDeviceMessageProps(eventData.Properties, cancellationToken);
 
                             ServiceEventSource.Current.ServiceMessage(
                                 Context,
