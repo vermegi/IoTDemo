@@ -9,6 +9,7 @@ using Microsoft.ServiceFabric.Actors.Client;
 using IoTDemo.IoTDeviceActor.Interfaces;
 using Microsoft.ServiceBus.Messaging;
 using Microsoft.ServiceBus;
+using MongoDB.Driver;
 
 namespace IoTDemo.IoTDeviceActor
 {
@@ -56,6 +57,20 @@ namespace IoTDemo.IoTDeviceActor
             }
 
             await StateManager.AddOrUpdateStateAsync("lastState", message, (key, value) => message, cancellationToken);
+
+            await AddMessageInDb(new Message { TheMessage = message, DeviceId = this.GetActorId().GetStringId() });
+        }
+
+        private static async Task AddMessageInDb(Message message)
+        {
+            var mongoConnectionString = "mongodb://iotdemogittecosmos:ZzWlJ5ETwSQ17kFIYp5fv0GqDTJHulQ91qvwac3DBXQ1n7Ve3ojq5iAd46BO1dEwmw2sYR5yPMQvfZgtdnVENA==@iotdemogittecosmos.documents.azure.com:10255/?ssl=true&replicaSet=globaldb";
+            var dbName = "IoTDemo";
+            var collectionName = "messages";
+
+            var client = new MongoClient(mongoConnectionString);
+            var db = client.GetDatabase(dbName);
+            var messages = db.GetCollection<Message>(collectionName);
+            await messages.InsertOneAsync(message);
         }
 
         private async Task SendStateChangeMessage(string message, string lastState)
